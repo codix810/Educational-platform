@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverActions: {},
-  },
   eslint: {
-    ignoreDuringBuilds: true, // ✅ ده اللي بيحل المشكلة مؤقتًا
+    ignoreDuringBuilds: true, // ✅ عشان يتجاهل أخطاء ESLint
+  },
+  experimental: {
+    serverActions: {}, // ✅ استخدم كائن فاضي بدل true
   },
 };
 
