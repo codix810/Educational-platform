@@ -26,7 +26,8 @@ export default function DevicesPage() {
     fetch('/api/devices')
       .then((res) => res.json())
       .then((data) => {
-        const sorted = (data.data || []).sort((a, b) => a.email.localeCompare(b.email));
+// @ts-ignore
+const sorted = (data.data || []).sort((a, b) => a.email.localeCompare(b.email));
         setDeviceData(sorted);
         setFilteredData(sorted);
         setLoading(false);
