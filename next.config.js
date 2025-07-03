@@ -1,10 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverActions: true,
+    serverActions: {}, // ✅ صح
   },
   eslint: {
-    ignoreDuringBuilds: true, // ✅ ده يمنع Vercel يوقف الـ build بسبب ESLint
+    ignoreDuringBuilds: true, // ✅ علشان ما يوقفش على التحذيرات
+  },
+  typescript: {
+    ignoreBuildErrors: false, // خليه false علشان تشوف الأخطاء المهمة بس
   },
 };
 
