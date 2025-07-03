@@ -1,7 +1,7 @@
 import clientPromise from '../../../../lib/mongodb';
 import { NextResponse } from 'next/server';
 
-export async function POST(req: Request) {
+export async function POST(req) {
   try {
     const body = await req.json();
     const client = await clientPromise;
@@ -25,7 +25,7 @@ export async function GET() {
 
     return NextResponse.json({ courses });
   } catch (error) {
-    console.error('❌ Error in GET /api/courses:', error.message);
     return NextResponse.json({ message: 'Failed to fetch courses' }, { status: 500 });
+      console.log(error)
   }
 }
