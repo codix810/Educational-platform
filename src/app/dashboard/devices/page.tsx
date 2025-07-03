@@ -5,36 +5,51 @@ import { useRouter } from 'next/navigation';
 import { EnvelopeIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 
+// تعريف نوع الجهاز
+type Device = {
+  index: number;
+  deviceId: string;
+  userAgent: string;
+  lastUsed: string;
+};
+
+// تعريف نوع المستخدم مع الأجهزة المرتبطة به
+type UserDevice = {
+  email: string;
+  devices: Device[];
+};
+
 export default function DevicesPage() {
-  const [deviceData, setDeviceData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
+  const [deviceData, setDeviceData] = useState<UserDevice[]>([]);
+  const [filteredData, setFilteredData] = useState<UserDevice[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // ✅ حماية الأدمن
+  // حماية الأدمن
   useEffect(() => {
     const userData = localStorage.getItem('user');
     if (!userData) return router.push('/login');
 
     const user = JSON.parse(userData);
     if (user.role !== 'admin') router.push('/');
-  }, []);
+  }, [router]);
 
-  // ✅ تحميل الأجهزة
+  // تحميل الأجهزة وترتيبها حسب البريد الإلكتروني
   useEffect(() => {
     fetch('/api/devices')
       .then((res) => res.json())
       .then((data) => {
-// @ts-ignore
-const sorted = (data.data || []).sort((a, b) => a.email.localeCompare(b.email));
+        const sorted: UserDevice[] = (data.data || []).sort((a, b) =>
+          a.email.localeCompare(b.email)
+        );
         setDeviceData(sorted);
         setFilteredData(sorted);
         setLoading(false);
       });
   }, []);
 
-  // ✅ البحث بالإيميل
+  // البحث عن طريق البريد الإلكتروني
   useEffect(() => {
     const filtered = deviceData.filter((u) =>
       u.email.toLowerCase().includes(search.toLowerCase())
@@ -42,7 +57,7 @@ const sorted = (data.data || []).sort((a, b) => a.email.localeCompare(b.email));
     setFilteredData(filtered);
   }, [search, deviceData]);
 
-  // ✅ تحميل بنقاط متحركة
+  // شاشة تحميل بنقاط متحركة
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-[#F9FAFB]">
@@ -66,9 +81,11 @@ const sorted = (data.data || []).sort((a, b) => a.email.localeCompare(b.email));
       transition={{ duration: 0.6 }}
       className="p-6 max-w-6xl mx-auto"
     >
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-700">سجل الأجهزة المرتبطة</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center text-gray-700">
+        سجل الأجهزة المرتبطة
+      </h1>
 
-      {/* ✅ البحث */}
+      {/* البحث */}
       <div className="flex justify-center mb-8">
         <div className="flex items-center w-full max-w-md bg-white rounded-md border px-3 py-2 shadow-sm">
           <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 mr-2" />
@@ -83,7 +100,9 @@ const sorted = (data.data || []).sort((a, b) => a.email.localeCompare(b.email));
       </div>
 
       {filteredData.length === 0 && (
-        <p className="text-center text-gray-500 mt-10">لا يوجد نتائج تطابق البحث.</p>
+        <p className="text-center text-gray-500 mt-10">
+          لا يوجد نتائج تطابق البحث.
+        </p>
       )}
 
       {filteredData.map((user, i) => (
