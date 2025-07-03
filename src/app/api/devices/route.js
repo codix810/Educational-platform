@@ -1,4 +1,3 @@
-// المسار: /app/api/all-devices/route.ts
 import clientPromise from '../../../../lib/mongodb';
 import { NextResponse } from 'next/server';
 
@@ -40,7 +39,7 @@ export async function GET() {
 
     return NextResponse.json({ data: grouped }, { status: 200 });
   } catch (err) {
-    console.error('❌ Error in GET /api/all-devices:', err.message || err);
+    console.error('❌ Error:', err);
     return NextResponse.json({ message: 'خطأ في السيرفر' }, { status: 500 });
   }
 }
