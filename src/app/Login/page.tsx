@@ -15,8 +15,7 @@ export default function LoginPage() {
     }
   }, []);
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     const deviceId = localStorage.getItem('deviceId');
