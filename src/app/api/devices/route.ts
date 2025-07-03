@@ -39,7 +39,7 @@ export async function GET() {
     });
 
     return NextResponse.json({ data: grouped }, { status: 200 });
-  } catch (err: any) {
+  } catch (err) {
     console.error('❌ Error in GET /api/all-devices:', err.message || err);
     return NextResponse.json({ message: 'خطأ في السيرفر' }, { status: 500 });
   }
