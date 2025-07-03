@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 
@@ -15,22 +15,21 @@ export default function AddCoursePage() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // ✅ حماية الصفحة للأدمن فقط
   useEffect(() => {
     const userData = localStorage.getItem('user');
     if (!userData) return router.push('/login');
 
     const user = JSON.parse(userData);
     if (user.role !== 'admin') return router.push('/');
-    
-    setTimeout(() => setLoading(false), 1000); // أنيميشن وهمي للتحميل
+
+    setTimeout(() => setLoading(false), 1000);
   }, [router]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const res = await fetch('/api/courses', {
@@ -46,7 +45,6 @@ export default function AddCoursePage() {
     }
   };
 
-  // ✅ شاشة التحميل اللطيفة
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-[#F9FAFB]">
