@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     const result = await collection.insertOne(body);
 
     return NextResponse.json({ message: 'Course added', id: result.insertedId });
-  } catch (error: any) {
+  } catch (error) {
     console.error('❌ Error in POST /api/courses:', error.message);
     return NextResponse.json({ message: 'Failed to add course' }, { status: 500 });
   }
@@ -24,7 +24,7 @@ export async function GET() {
     const courses = await db.collection('courses').find().toArray();
 
     return NextResponse.json({ courses });
-  } catch (error: any) {
+  } catch (error) {
     console.error('❌ Error in GET /api/courses:', error.message);
     return NextResponse.json({ message: 'Failed to fetch courses' }, { status: 500 });
   }
