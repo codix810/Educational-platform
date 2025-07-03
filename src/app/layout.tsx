@@ -10,9 +10,18 @@ import {
 import { useEffect, useState, Fragment } from 'react';
 import { useRouter } from 'next/navigation';
 import './globals.css';
+import type { ReactNode } from 'react';
+
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<any>(null);
+  type UserType = {
+  role: 'admin' | 'user';
+  email?: string;
+  name?: string;
+};
+
+const [user, setUser] = useState<UserType | null>(null);
+
   const router = useRouter();
   const [activeAdmin, setActiveAdmin] = useState('');
 
