@@ -11,9 +11,8 @@ import { useEffect, useState, Fragment } from 'react';
 import { useRouter } from 'next/navigation';
 import './globals.css';
 
-
-export default function RootLayout({ children }) {
-  const [user, setUser] = useState(null);
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<any>(null);
   const router = useRouter();
   const [activeAdmin, setActiveAdmin] = useState('');
 
