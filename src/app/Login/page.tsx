@@ -9,7 +9,6 @@ export default function LoginPage() {
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     if (!localStorage.getItem('deviceId')) {
@@ -20,7 +19,6 @@ export default function LoginPage() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
-
     const deviceId = localStorage.getItem('deviceId');
     const res = await fetch('/api/login', {
       method: 'POST',

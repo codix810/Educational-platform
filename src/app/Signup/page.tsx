@@ -12,7 +12,6 @@ export default function SignupPage() {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
 
   useEffect(() => {
     if (!localStorage.getItem('deviceId')) {

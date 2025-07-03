@@ -11,9 +11,6 @@ import { useEffect, useState, Fragment } from 'react';
 import { useRouter } from 'next/navigation';
 import './globals.css';
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
 
 export default function RootLayout({ children }) {
   const [user, setUser] = useState(null);

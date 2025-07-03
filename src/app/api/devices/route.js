@@ -1,6 +1,5 @@
 // المسار: /app/api/all-devices/route.ts
 import clientPromise from '../../../../lib/mongodb';
-import { ObjectId } from 'mongodb';
 import { NextResponse } from 'next/server';
 
 export async function GET() {

@@ -75,10 +75,9 @@ export default function ProfilePage() {
         showMessage(data.message, 'error');
       }
     } catch (err) {
-      showMessage('❌ فشل حفظ التعديلات', 'error');
+      showMessage('❌ فشل حفظ التعديلات', 'err');
     }
   };
-
   const handleLogout = () => {
     localStorage.removeItem('user');
     router.push('/Login');
