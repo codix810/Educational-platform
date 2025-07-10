@@ -10,7 +10,7 @@ export function useAdminGuard() {
 
     if (!userData) {
       console.log('🚫 زائر - تحويل للوجين');
-      router.replace('/login');
+      router.replace('/not-found.js');
       return;
     }
 
@@ -18,7 +18,7 @@ export function useAdminGuard() {
 
     if (user.role !== 'admin') {
       console.log('🚫 مش أدمن - تحويل للرئيسية');
-      router.replace('/');
+      router.replace('/not-found.js');
     }
   }, []);
 }

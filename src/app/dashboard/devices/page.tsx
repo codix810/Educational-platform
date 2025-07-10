@@ -1,29 +1,26 @@
-// @ts-nocheck
-'use client';
+"use client";
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { EnvelopeIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
+import { useAdminGuard } from '../../../../hooks/useAdminGuard';
 
 export default function DevicesPage() {
+      useAdminGuard(); // ✅ حماية الأدمن فقط
+
   const [deviceData, setDeviceData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // ✅ حماية الأدمن
-  useEffect(() => {
-    const userData = localStorage.getItem('user');
-    if (!userData) return router.push('/login');
 
-    const user = JSON.parse(userData);
-    if (user.role !== 'admin') router.push('/');
-  }, []);
-
+      
   // ✅ تحميل الأجهزة
   useEffect(() => {
+
+  
     fetch('/api/devices')
       .then((res) => res.json())
       .then((data) => {
@@ -42,7 +39,6 @@ export default function DevicesPage() {
     setFilteredData(filtered);
   }, [search, deviceData]);
 
-  // ✅ تحميل بنقاط متحركة
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-[#F9FAFB]">
@@ -64,9 +60,34 @@ export default function DevicesPage() {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="p-6 max-w-6xl mx-auto"
+      className="p-6 max-w-7xl mx-auto"
     >
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-700">سجل الأجهزة المرتبطة</h1>
+    <h1 className="text-3xl font-bold mb-6 text-center text-gray-700">    لوحة إدارة الأجهزة</h1>
+      {/* ✅ الإحصائيات */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10"
+      >
+        <div className="bg-[#E3F2FD] text-[#1565C0] p-4 rounded-lg shadow text-center">
+          <p className="text-sm">إجمالي المستخدمين</p>
+          <p className="text-2xl font-bold">{deviceData.length}</p>
+        </div>
+        <div className="bg-[#FCE4EC] text-[#AD1457] p-4 rounded-lg shadow text-center">
+          <p className="text-sm">عدد الأجهزة</p>
+          <p className="text-2xl font-bold">
+            {deviceData.reduce((acc, u) => acc + (u.devices?.length || 0), 0)}
+          </p>
+        </div>
+        <div className="bg-[#E8F5E9] text-[#2E7D32] p-4 rounded-lg shadow text-center">
+          <p className="text-sm">عدد المستخدمين النشطين</p>
+          <p className="text-2xl font-bold">
+            {deviceData.filter((u) => u.devices?.length > 0).length}
+          </p>
+        </div>
+      </motion.div>
+
 
       {/* ✅ البحث */}
       <div className="flex justify-center mb-8">
@@ -92,17 +113,17 @@ export default function DevicesPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: i * 0.05 }}
-          className="mb-10 overflow-x-auto bg-gradient-to-br from-[#F0F4F8] to-[#E8F5E9] rounded-xl shadow-md p-6 border border-gray-200"
+          className="mb-10 overflow-x-auto bg-white rounded-xl shadow-md p-6 border border-gray-200"
         >
-          <h2 className="text-lg flex items-center font-semibold mb-4 text-[#2E7D32]">
+          <h2 className="text-lg flex items-center font-semibold mb-4 text-blue-600">
             <EnvelopeIcon className="h-5 w-5 mr-2" />
             {user.email}
           </h2>
 
-          {user.devices.length > 0 ? (
+          {user.devices?.length > 0 ? (
             <table className="w-full table-auto border-collapse text-sm text-gray-800">
               <thead>
-                <tr className="bg-[#C8E6C9] text-gray-900">
+                <tr className="bg-gray-100 text-gray-900 text-center">
                   <th className="border px-4 py-2">#</th>
                   <th className="border px-4 py-2">معرّف الجهاز</th>
                   <th className="border px-4 py-2">المتصفح</th>
@@ -115,7 +136,7 @@ export default function DevicesPage() {
                     key={idx}
                     className="text-center bg-white hover:bg-gray-50 transition"
                   >
-                    <td className="border px-3 py-1">{d.index}</td>
+                    <td className="border px-3 py-1">{idx + 1}</td>
                     <td className="border px-3 py-1 break-words">{d.deviceId}</td>
                     <td className="border px-3 py-1">{d.userAgent}</td>
                     <td className="border px-3 py-1">{d.lastUsed}</td>

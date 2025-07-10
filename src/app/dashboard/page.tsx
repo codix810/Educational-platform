@@ -1,4 +1,3 @@
-// @ts-nocheck
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -68,9 +67,9 @@ export default function AdminDashboard() {
   useEffect(() => {
     const loadDashboardData = async () => {
       const savedUser = localStorage.getItem('user');
-      if (!savedUser) return router.push('/');
+      if (!savedUser) return router.push('/not-found.js');
       const parsedUser = JSON.parse(savedUser);
-      if (parsedUser.role !== 'admin') return router.push('/');
+      if (parsedUser.role !== 'admin') return router.push('/not-found.js');
       setUser(parsedUser);
 
       const [usersRes, coursesRes] = await Promise.all([
@@ -198,7 +197,11 @@ export default function AdminDashboard() {
 
         {/* المستخدمين */}
         <section className="mb-20 bg-[#F3F6F4] p-6 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4 border-b pb-2 text-gray-700">المستخدمين</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold">المستخدمين</h2>
+              <button onClick={() => router.push(`/Signup`)}className="bg-[#00C853] hover:bg-[#00B342] text-white px-4 py-2 rounded shadow">إضافة مستخدم</button>
+            </div>
+
           <div className="overflow-x-auto">
             <table className="w-full table-auto border-collapse text-gray-700">
               <thead>
@@ -275,6 +278,7 @@ export default function AdminDashboard() {
                         >
                           <TrashIcon className="h-4 w-4" /> حذف
                         </button>
+                        
                       </div>
                     </td>
                   </motion.tr>
@@ -284,9 +288,13 @@ export default function AdminDashboard() {
           </div>
         </section>
 {/* جدول الكورسات */}
-<section className="bg-[#F3F6F4] p-6 rounded-lg shadow">
-  <h2 className="text-lg font-semibold mb-4 border-b pb-2 text-gray-700">الكورسات</h2>
+  <section className="bg-[#F3F6F4] p-6 rounded-lg shadow">
+    <div className="flex justify-between items-center mb-4">
+      <h2 className="text-lg font-semibold">الكورسات</h2>
+      <button onClick={() => router.push(`/dashboard/AddCourse`)}className="bg-[#00C853] hover:bg-[#00B342] text-white px-4 py-2 rounded shadow">إضافة كورس</button>
+    </div>
   <div className="overflow-x-auto">
+    
     <table className="w-full table-auto border-collapse text-gray-700">
       <thead>
         <tr className="bg-gray-100 text-center">

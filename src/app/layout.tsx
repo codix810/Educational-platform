@@ -10,18 +10,10 @@ import {
 import { useEffect, useState, Fragment } from 'react';
 import { useRouter } from 'next/navigation';
 import './globals.css';
-import type { ReactNode } from 'react';
 
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  type UserType = {
-  role: 'admin' | 'user';
-  email?: string;
-  name?: string;
-};
-
-const [user, setUser] = useState<UserType | null>(null);
-
+export default function RootLayout({ children }) {
+  const [user, setUser] = useState(null);
   const router = useRouter();
   const [activeAdmin, setActiveAdmin] = useState('');
 
@@ -47,9 +39,12 @@ const [user, setUser] = useState<UserType | null>(null);
 
   const adminLinks = [
     { name: 'Dashboard', href: '/dashboard' },
-    { name: 'AddCourse', href: '/dashboard/AddCourse' },
-    { name: 'AddUser', href: '/Signup' },
     { name: 'Devices', href: '/dashboard/devices' },
+    { name: 'Videos', href: '/dashboard/videos' },
+    { name: 'Exams', href: '/dashboard/exams' },
+    { name: 'files', href: '/dashboard/files' },
+
+
   ];
 
   return (

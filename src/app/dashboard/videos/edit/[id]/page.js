@@ -1,70 +1,72 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 
-export default function EditCoursePage() {
-  const [courseData, setCourseData] = useState(null);
-  const [loading, setLoading] = useState(true);
+export default function EditVideoPage() {
   const router = useRouter();
-  const { id } = useParams();
+  const { id: videoId } = useParams();
 
-  // ✅ حماية الأدمن
+  const [video, setVideo] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const userData = localStorage.getItem('user');
     if (!userData) return router.push('/not-found.js');
-
     const user = JSON.parse(userData);
     if (user.role !== 'admin') return router.push('/not-found.js');
   }, [router]);
 
-  // ✅ تحميل بيانات الكورس
   useEffect(() => {
-    const fetchCourse = async () => {
-      try {
-        const res = await fetch(`/api/courses/${id}`);
-        const data = await res.json();
-        setCourseData(data);
-        setLoading(false);
-      } catch (err) {
-        console.error('❌ Error fetching course:', err);
-      }
-    };
-    if (id) fetchCourse();
-  }, [id]);
+const fetchVideo = async () => {
+  try {
+    const res = await fetch(`/api/videos/${videoId}`);
+    const data = await res.json();
+
+
+    setVideo(data.video); // ✅ ده المهم
+    setLoading(false);
+  } catch (err) {
+    console.error('❌ Error fetching video:', err);
+  }
+};
+
+
+    if (videoId) fetchVideo();
+  }, [videoId]);
 
   const handleChange = (e) => {
-    setCourseData({ ...courseData, [e.target.name]: e.target.value });
+    setVideo({ ...video, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const res = await fetch(`/api/courses/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(courseData),
-      });
+  const { _id, ...updatedVideo } = video;
 
-      const text = await res.text();
-      console.log('Response status:', res.status);
-      console.log('Response body:', text);
+  try {
+    const res = await fetch(`/api/videos/${videoId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedVideo),
+    });
 
-      if (res.ok) {
-        router.push('/dashboard');
-      } else {
-        alert('حدث خطأ أثناء التعديل: ' + text);
-      }
-    } catch (err) {
-      console.error('❌ Error submitting update:', err);
-      alert('حدث خطأ أثناء إرسال البيانات');
+    if (res.ok) {
+      router.push('/dashboard/videos');
+    } else {
+      const errorText = await res.text();
+      alert('❌ فشل في التعديل: ' + errorText);
     }
-  };
+  } catch (err) {
+    console.error('❌ Error submitting update:', err);
+    alert('❌ حصل خطأ أثناء التعديل');
+  }
+};
 
-  // ✅ تحميل
-  if (loading || !courseData) {
+
+
+  if (loading || !video) {
     return (
       <div className="flex justify-center items-center h-screen bg-[#F9FAFB]">
         <motion.div
@@ -88,53 +90,52 @@ export default function EditCoursePage() {
       className="max-w-xl mx-auto mt-10 p-6 bg-[#F0F4F8] rounded-2xl shadow text-gray-800"
     >
       <h2 className="text-2xl font-bold mb-6 text-center text-[#374151]">
-        تعديل بيانات الكورس
+        تعديل بيانات الفيديو
       </h2>
       <form onSubmit={handleSubmit} className="space-y-4 text-sm">
         <div>
-          <label className="block mb-1 font-medium">اسم الكورس</label>
+          <label className="block mb-1 font-medium"> العنوان</label>
           <input
             type="text"
             name="title"
-            value={courseData.title || ''}
+            value={video.title || ''}
             onChange={handleChange}
             className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
             required
           />
         </div>
-
-        <div>
-          <label className="block mb-1 font-medium">السعر</label>
-          <input
-            type="number"
-            name="price"
-            value={courseData.price || ''}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block mb-1 font-medium">الوصف</label>
-          <textarea
-            name="description"
-            value={courseData.description || ''}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
-            required
-          ></textarea>
-        </div>
-
-        <div>
-          <label className="block mb-1 font-medium">رابط الصورة</label>
+          <div>
+          <label className="block mb-1 font-medium"> الدور</label>
           <input
             type="text"
-            name="image"
-            value={courseData.image || ''}
+            name="order"
+            value={video.order || ''}
             onChange={handleChange}
             className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
             required
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-medium"> المدة</label>
+          <input
+            type="text"
+            name="duration"
+            value={video.duration || ''}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+            readOnly
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-medium"> رابط الفيديو</label>
+          <input
+            type="text"
+            name="url"
+            value={video.url || ''}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+            readOnly
           />
         </div>
 
