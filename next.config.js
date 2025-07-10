@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverActions: {}
-  }
-}
+    serverActions: true, // ✅ لازم تبقى جوه object
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
