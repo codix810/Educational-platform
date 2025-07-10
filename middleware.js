@@ -2,7 +2,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // @ts-ignore
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
+
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
