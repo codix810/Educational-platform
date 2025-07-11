@@ -1,5 +1,7 @@
 // @ts-ignore
+
 'use client';
+
 import Link from 'next/link';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import {
@@ -7,14 +9,17 @@ import {
   XMarkIcon,
   UserIcon,
 } from '@heroicons/react/24/outline';
-import { useEffect, useState, Fragment } from 'react';
+import { useEffect, useState, Fragment, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import './globals.css';
-import { ReactNode } from 'react';
 
+type UserType = {
+  role: string;
+  [key: string]: any;
+};
 
-  export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState(null);
+export default function RootLayout({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<UserType | null>(null);
   const router = useRouter();
   const [activeAdmin, setActiveAdmin] = useState('');
 
@@ -44,8 +49,6 @@ import { ReactNode } from 'react';
     { name: 'Videos', href: '/dashboard/videos' },
     { name: 'Exams', href: '/dashboard/exams' },
     { name: 'files', href: '/dashboard/files' },
-
-
   ];
 
   return (
