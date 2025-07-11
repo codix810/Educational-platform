@@ -1,3 +1,4 @@
+// @ts-ignore
 'use client';
 
 import {
@@ -7,6 +8,9 @@ import {
   ChartBarIcon,
 } from '@heroicons/react/24/outline';
 
+/**
+ * @param {{ currentSection: string, onSectionChange: (section: string) => void }} props
+ */
 export default function Sidebar({ currentSection, onSectionChange }) {
   const navItems = [
     { key: 'info', label: 'معلوماتي', icon: UserIcon },
