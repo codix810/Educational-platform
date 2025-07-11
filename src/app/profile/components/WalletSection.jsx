@@ -1,9 +1,23 @@
+// @ts-ignore
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CreditCardIcon, PhoneIcon, BuildingLibraryIcon, BanknotesIcon, GlobeAltIcon } from "@heroicons/react/24/outline";
+import {
+  CreditCardIcon,
+  PhoneIcon,
+  BuildingLibraryIcon,
+  BanknotesIcon,
+  GlobeAltIcon,
+} from "@heroicons/react/24/outline";
 
+// ✅ تعريف Props
+type WalletSectionProps = {
+  paymentOption: string | null;
+  setPaymentOption: Dispatch<SetStateAction<string | null>>;
+};
+
+// ✅ خيارات الدفع
 const paymentOptions = [
   {
     label: "فودافون كاش",
@@ -61,15 +75,17 @@ const paymentOptions = [
   },
 ];
 
-export default function WalletSection() {
-  const [active, setActive] = useState(null);
+// ✅ المكون الرئيسي
+export default function WalletSection({ paymentOption, setPaymentOption }: WalletSectionProps) {
+  const active = paymentOption;
+  const setActive = setPaymentOption;
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white p-6 rounded shadow space-y-6">
       <h3 className="text-2xl font-bold mb-4">شحن المحفظة</h3>
 
       <div className="flex flex-wrap gap-4">
-        {paymentOptions.map(({ label, color, icon: Icon }, i) => (
+        {paymentOptions.map(({ label, color, icon: Icon }) => (
           <motion.button
             key={label}
             whileTap={{ scale: 0.95 }}
