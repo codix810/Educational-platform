@@ -189,7 +189,8 @@ export default function VideosDashboardPage() {
           {videos.length === 0 ? (
             <p className="text-sm text-gray-500">لا يوجد فيديوهات مضافة لهذا الكورس.</p>
           ) : (
-            <table className="w-full table-auto border-collapse text-sm">
+            <div className="overflow-x-auto">
+  <table className="min-w-full table-auto border-collapse text-sm">
               <thead>
                 <tr className="bg-gray-100 text-gray-700">
                   <th className="border px-3 py-2">#</th>
@@ -240,6 +241,7 @@ export default function VideosDashboardPage() {
                   ))}
               </tbody>
             </table>
+            </div>
           )}
         </motion.div>
       ))}
