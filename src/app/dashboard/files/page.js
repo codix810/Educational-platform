@@ -172,8 +172,9 @@ export default function FilesDashboardPage() {
               <DocumentArrowDownIcon className="h-5 w-5" /> إضافة ملف
             </button>
           </div>
+<div className="overflow-x-auto">
+  <table className="min-w-full table-auto border-collapse text-sm">
 
-          <table className="w-full table-auto border-collapse text-sm">
             <thead>
               <tr className="bg-gray-100 text-gray-700">
                 <th className="border px-3 py-2">الاسم</th>
@@ -218,6 +219,7 @@ export default function FilesDashboardPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </motion.div>
       ))}
 
