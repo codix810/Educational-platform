@@ -1,5 +1,6 @@
-"use client";
+// @ts-ignore
 
+"use client";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { EnvelopeIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
@@ -24,7 +25,7 @@ export default function DevicesPage() {
     fetch('/api/devices')
       .then((res) => res.json())
       .then((data) => {
-        const sorted = (data.data || []).sort((a, b) => a.email.localeCompare(b.email));
+      const sorted = (data.data || []).sort((a: any, b: any) => a.email.localeCompare(b.email));
         setDeviceData(sorted);
         setFilteredData(sorted);
         setLoading(false);
