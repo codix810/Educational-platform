@@ -1,6 +1,7 @@
+// @ts-ignore
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 
@@ -10,22 +11,31 @@ import WalletSection from './components/WalletSection';
 import CoursesSection from './components/CoursesSection';
 import LevelSection from './components/LevelSection';
 
+type UserType = {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  image?: string;
+  [key: string]: any;
+};
+
 export default function ProfilePage() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<UserType | null>(null);
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', image: '' });
-  const [section, setSection] = useState('info');
+  const [section, setSection] = useState<'info' | 'wallet' | 'courses' | 'level'>('info');
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
-  const [paymentOption, setPaymentOption] = useState(null);
+  const [paymentOption, setPaymentOption] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
       const savedUser = localStorage.getItem('user');
       if (!savedUser) return router.push('/Login');
-      const parsedUser = JSON.parse(savedUser);
+      const parsedUser: UserType = JSON.parse(savedUser);
       if (!parsedUser._id) return router.push('/Login');
 
       const res = await fetch(`/api/users/${parsedUser._id}`);
@@ -42,7 +52,7 @@ export default function ProfilePage() {
     fetchUserData();
   }, [router]);
 
-  const showMessage = (msg, type) => {
+  const showMessage = (msg: string, type: string) => {
     setMessage(msg);
     setMessageType(type);
     setTimeout(() => {
@@ -51,11 +61,11 @@ export default function ProfilePage() {
     }, 3000);
   };
 
-  const handleInputChange = (e) =>
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) setFormData({ ...formData, image: URL.createObjectURL(file) });
   };
 
@@ -68,16 +78,17 @@ export default function ProfilePage() {
       });
       const data = await res.json();
       if (res.ok) {
-        setUser((prev) => ({ ...prev, ...formData }));
+        setUser((prev) => (prev ? { ...prev, ...formData } : null));
         setEditing(false);
         showMessage('✅ تم حفظ التعديلات بنجاح', 'success');
       } else {
         showMessage(data.message, 'error');
       }
     } catch (err) {
-      showMessage('❌ فشل حفظ التعديلات', 'err');
+      showMessage('❌ فشل حفظ التعديلات', 'error');
     }
   };
+
   const handleLogout = () => {
     localStorage.removeItem('user');
     router.push('/Login');
