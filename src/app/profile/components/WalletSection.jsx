@@ -1,7 +1,7 @@
 // @ts-ignore
 "use client";
 
-import { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CreditCardIcon,
@@ -11,77 +11,122 @@ import {
   GlobeAltIcon,
 } from "@heroicons/react/24/outline";
 
-// ✅ تعريف Props
-type WalletSectionProps = {
-  paymentOption: string | null;
-  setPaymentOption: Dispatch<SetStateAction<string | null>>;
-};
+export default function WalletSection({ paymentOption, setPaymentOption }) {
+  const paymentOptions = [
+    {
+      label: "فودافون كاش",
+      color: "red",
+      icon: PhoneIcon,
+      fields: (
+        <>
+          <input
+            type="text"
+            placeholder="رقم الهاتف"
+            className="w-full border p-2 rounded mb-2"
+            required
+          />
+          <input
+            type="file"
+            className="w-full border p-2 rounded"
+            required
+          />
+        </>
+      ),
+    },
+    {
+      label: "فيزا",
+      color: "blue",
+      icon: CreditCardIcon,
+      fields: (
+        <>
+          <input
+            type="text"
+            placeholder="رقم البطاقة"
+            className="w-full border p-2 rounded mb-2"
+            required
+          />
+          <input
+            type="text"
+            placeholder="تاريخ الإنتهاء"
+            className="w-full border p-2 rounded mb-2"
+            required
+          />
+          <input
+            type="text"
+            placeholder="CVV"
+            className="w-full border p-2 rounded"
+            required
+          />
+        </>
+      ),
+    },
+    {
+      label: "فوري",
+      color: "yellow",
+      icon: BuildingLibraryIcon,
+      fields: (
+        <>
+          <input
+            type="text"
+            placeholder="كود العملية"
+            className="w-full border p-2 rounded"
+            required
+          />
+        </>
+      ),
+    },
+    {
+      label: "PayPal",
+      color: "indigo",
+      icon: GlobeAltIcon,
+      fields: (
+        <>
+          <input
+            type="email"
+            placeholder="البريد الإلكتروني"
+            className="w-full border p-2 rounded"
+            required
+          />
+        </>
+      ),
+    },
+    {
+      label: "حساب بنكي",
+      color: "green",
+      icon: BanknotesIcon,
+      fields: (
+        <>
+          <input
+            type="text"
+            placeholder="اسم البنك"
+            className="w-full border p-2 rounded mb-2"
+            required
+          />
+          <input
+            type="text"
+            placeholder="رقم الحساب"
+            className="w-full border p-2 rounded"
+            required
+          />
+        </>
+      ),
+    },
+  ];
 
-// ✅ خيارات الدفع
-const paymentOptions = [
-  {
-    label: "فودافون كاش",
-    color: "red",
-    icon: PhoneIcon,
-    fields: (
-      <>
-        <input type="text" placeholder="رقم الهاتف" className="w-full border p-2 rounded mb-2" required />
-        <input type="file" className="w-full border p-2 rounded" required />
-      </>
-    ),
-  },
-  {
-    label: "فيزا",
-    color: "blue",
-    icon: CreditCardIcon,
-    fields: (
-      <>
-        <input type="text" placeholder="رقم البطاقة" className="w-full border p-2 rounded mb-2" required />
-        <input type="text" placeholder="تاريخ الإنتهاء" className="w-full border p-2 rounded mb-2" required />
-        <input type="text" placeholder="CVV" className="w-full border p-2 rounded" required />
-      </>
-    ),
-  },
-  {
-    label: "فوري",
-    color: "yellow",
-    icon: BuildingLibraryIcon,
-    fields: (
-      <>
-        <input type="text" placeholder="كود العملية" className="w-full border p-2 rounded" required />
-      </>
-    ),
-  },
-  {
-    label: "PayPal",
-    color: "indigo",
-    icon: GlobeAltIcon,
-    fields: (
-      <>
-        <input type="email" placeholder="البريد الإلكتروني" className="w-full border p-2 rounded" required />
-      </>
-    ),
-  },
-  {
-    label: "حساب بنكي",
-    color: "green",
-    icon: BanknotesIcon,
-    fields: (
-      <>
-        <input type="text" placeholder="اسم البنك" className="w-full border p-2 rounded mb-2" required />
-        <input type="text" placeholder="رقم الحساب" className="w-full border p-2 rounded" required />
-      </>
-    ),
-  },
-];
-
-// ✅ المكون الرئيسي
-export default function WalletSection({ paymentOption, setPaymentOption }: WalletSectionProps) {
-  const active = paymentOption;
-  const setActive = setPaymentOption;
+  const handleSelect = (label) => {
+    if (paymentOption === label) {
+      setPaymentOption(null);
+    } else {
+      setPaymentOption(label);
+    }
+  };
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white p-6 rounded shadow space-y-6">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="bg-white p-6 rounded shadow space-y-6"
+    >
       <h3 className="text-2xl font-bold mb-4">شحن المحفظة</h3>
 
       <div className="flex flex-wrap gap-4">
@@ -89,7 +134,7 @@ export default function WalletSection({ paymentOption, setPaymentOption }: Walle
           <motion.button
             key={label}
             whileTap={{ scale: 0.95 }}
-            onClick={() => setActive(label === active ? null : label)}
+            onClick={() => handleSelect(label)}
             className={`flex items-center gap-2 px-4 py-3 rounded-lg shadow transition-all font-semibold text-${color}-800 bg-${color}-100 hover:bg-${color}-200`}
           >
             <Icon className="w-5 h-5" />
@@ -102,7 +147,7 @@ export default function WalletSection({ paymentOption, setPaymentOption }: Walle
         <AnimatePresence mode="wait">
           {paymentOptions.map(
             ({ label, fields, color }) =>
-              active === label && (
+              paymentOption === label && (
                 <motion.form
                   key={label}
                   onSubmit={(e) => {
@@ -114,7 +159,9 @@ export default function WalletSection({ paymentOption, setPaymentOption }: Walle
                   exit={{ opacity: 0, y: 10 }}
                   className={`p-4 border-2 border-${color}-300 rounded bg-white space-y-4 shadow`}
                 >
-                  <h4 className={`text-lg font-bold text-${color}-700 mb-2`}>{label}</h4>
+                  <h4 className={`text-lg font-bold text-${color}-700 mb-2`}>
+                    {label}
+                  </h4>
                   {fields}
                   <motion.button
                     whileTap={{ scale: 0.97 }}
