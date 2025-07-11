@@ -1,7 +1,11 @@
+// @ts-ignore
 'use client';
 
 import { motion } from 'framer-motion';
 
+/** 
+ * @param {{ loginCount?: number, lastLogin?: string | null }} props 
+ */
 export default function LevelSection({ loginCount = 0, lastLogin }) {
   return (
     <motion.div
