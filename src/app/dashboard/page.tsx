@@ -1,3 +1,4 @@
+// @ts-ignore
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -14,7 +15,33 @@ import {
 } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 
-const ConfirmModal = ({ isOpen, onClose, onConfirm, message }) => {
+type User = {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+  createdAt: string;
+  loginCount?: number;
+  password?: string;
+};
+
+type Course = {
+  _id: string;
+  title: string;
+  price: number;
+  description: string;
+  image?: string;
+};
+
+type ConfirmModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  message: string;
+};
+
+const ConfirmModal = ({ isOpen, onClose, onConfirm, message }: ConfirmModalProps) => {
   if (!isOpen) return null;
 
   return (
@@ -53,22 +80,22 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, message }) => {
 };
 
 export default function AdminDashboard() {
-  const [users, setUsers] = useState([]);
-  const [courses, setCourses] = useState([]);
-  const [user, setUser] = useState(null);
-  const [showPassword, setShowPassword] = useState(null);
+  const [users, setUsers] = useState<User[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [showPassword, setShowPassword] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-  const [modalAction, setModalAction] = useState(() => {});
+  const [modalAction, setModalAction] = useState<() => void>(() => {});
   const router = useRouter();
 
   useEffect(() => {
     const loadDashboardData = async () => {
       const savedUser = localStorage.getItem('user');
       if (!savedUser) return router.push('/not-found.js');
-      const parsedUser = JSON.parse(savedUser);
+      const parsedUser: User = JSON.parse(savedUser);
       if (parsedUser.role !== 'admin') return router.push('/not-found.js');
       setUser(parsedUser);
 
@@ -81,7 +108,7 @@ export default function AdminDashboard() {
       const coursesData = await coursesRes.json();
 
       setUsers(usersData.users || []);
-      setCourses((coursesData.courses || []).sort((a, b) => a.price - b.price));
+      setCourses((coursesData.courses || []).sort((a: Course, b: Course) => a.price - b.price));
       setLoading(false);
     };
 
@@ -93,12 +120,12 @@ export default function AdminDashboard() {
     u.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const deleteUser = async (id) => {
+  const deleteUser = async (id: string) => {
     await fetch(`/api/users/${id}`, { method: 'DELETE' });
     setUsers(users.filter((u) => u._id !== id));
   };
 
-  const deleteCourse = async (id) => {
+  const deleteCourse = async (id: string) => {
     await fetch(`/api/courses/${id}`, { method: 'DELETE' });
     setCourses(courses.filter((c) => c._id !== id));
   };
@@ -106,12 +133,15 @@ export default function AdminDashboard() {
   const handlePrint = () => {
     const printable = filteredUsers.map(u => `الاسم: ${u.name}\nالبريد: ${u.email}\nالهاتف: ${u.phone}\nالدور: ${u.role}\n---`).join('\n\n');
     const newWindow = window.open('', '_blank');
-    newWindow.document.write(`<pre style="font-family: Arial; padding: 20px">${printable}</pre>`);
-    newWindow.document.close();
-    newWindow.print();
+    if (newWindow) {
+      newWindow.document.write(`<pre style="font-family: Arial; padding: 20px">${printable}</pre>`);
+      newWindow.document.close();
+      newWindow.print();
+    }
   };
 
   if (!user || user.role !== 'admin') return null;
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -145,8 +175,6 @@ export default function AdminDashboard() {
       >
         <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">لوحة التحكم</h1>
 
-        {/* باقي الإحصائيات والبحث زي ما عندك... */}
-{/* إحصائيات */}
 <motion.div
   initial={{ opacity: 0, y: -20 }}
   animate={{ opacity: 1, y: 0 }}
