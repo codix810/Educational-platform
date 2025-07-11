@@ -1,5 +1,4 @@
 // @ts-ignore
-
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -8,7 +7,6 @@ import { EnvelopeIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import { useAdminGuard } from '../../../../hooks/useAdminGuard';
 
-//  هنا نحط النوع فوق قبل أي استخدام ليه
 type Device = {
   email: string;
   devices?: {
@@ -19,7 +17,7 @@ type Device = {
 };
 
 export default function DevicesPage() {
-      useAdminGuard(); //  حماية الأدمن فقط
+  useAdminGuard(); // ✅ حماية الأدمن فقط
 
   const [deviceData, setDeviceData] = useState<Device[]>([]);
   const [filteredData, setFilteredData] = useState<Device[]>([]);
@@ -29,18 +27,17 @@ export default function DevicesPage() {
 
   // ✅ تحميل الأجهزة
   useEffect(() => {
-
     fetch('/api/devices')
       .then((res) => res.json())
       .then((data) => {
-      const sorted = (data.data || []).sort((a: any, b: any) => a.email.localeCompare(b.email));
+        const sorted = (data.data || []).sort((a: any, b: any) => a.email.localeCompare(b.email));
         setDeviceData(sorted);
         setFilteredData(sorted);
         setLoading(false);
       });
   }, []);
 
-  //  البحث بالإيميل
+  // ✅ البحث بالإيميل
   useEffect(() => {
     const filtered = deviceData.filter((u) =>
       u.email.toLowerCase().includes(search.toLowerCase())
@@ -71,7 +68,8 @@ export default function DevicesPage() {
       transition={{ duration: 0.6 }}
       className="p-6 max-w-7xl mx-auto"
     >
-    <h1 className="text-3xl font-bold mb-6 text-center text-gray-700">    لوحة إدارة الأجهزة</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center text-gray-700">لوحة إدارة الأجهزة</h1>
+
       {/* ✅ الإحصائيات */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -86,18 +84,25 @@ export default function DevicesPage() {
         <div className="bg-[#FCE4EC] text-[#AD1457] p-4 rounded-lg shadow text-center">
           <p className="text-sm">عدد الأجهزة</p>
           <p className="text-2xl font-bold">
-              {deviceData.filter((u) => Array.isArray(u.devices) && u.devices.length > 0).length}
+            {
+              deviceData.reduce((acc, u) => {
+                if (Array.isArray(u.devices)) {
+                  return acc + u.devices.length;
+                }
+                return acc;
+              }, 0)
+            }
           </p>
-
         </div>
         <div className="bg-[#E8F5E9] text-[#2E7D32] p-4 rounded-lg shadow text-center">
           <p className="text-sm">عدد المستخدمين النشطين</p>
           <p className="text-2xl font-bold">
-              {deviceData.filter((u) => Array.isArray(u.devices) && u.devices.length > 0).length}
+            {
+              deviceData.filter((u) => Array.isArray(u.devices) && u.devices.length > 0).length
+            }
           </p>
         </div>
       </motion.div>
-
 
       {/* ✅ البحث */}
       <div className="flex justify-center mb-8">
@@ -130,7 +135,7 @@ export default function DevicesPage() {
             {user.email}
           </h2>
 
-          {user.devices?.length > 0 ? (
+          {Array.isArray(user.devices) && user.devices.length > 0 ? (
             <table className="w-full table-auto border-collapse text-sm text-gray-800">
               <thead>
                 <tr className="bg-gray-100 text-gray-900 text-center">
