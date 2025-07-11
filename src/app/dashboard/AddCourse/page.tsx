@@ -1,6 +1,6 @@
 // @ts-ignore
 'use client';
-
+// @ts-ignore
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -26,8 +26,7 @@ export default function AddCoursePage() {
     
     setTimeout(() => setLoading(false), 1000); // أنيميشن وهمي للتحميل
   }, [router]);
-// @ts-ignore
-const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   setForm({ ...form, [e.target.name]: e.target.value });
 };
 
@@ -47,7 +46,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     }
   };
 
-  // ✅ شاشة التحميل اللطيفة
+  //  شاشة التحميل اللطيفة
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-[#F9FAFB]">
