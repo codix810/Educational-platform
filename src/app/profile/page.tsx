@@ -141,6 +141,7 @@ export default function ProfilePage() {
             handleSave={handleSave}
             handleLogout={handleLogout}
           />
+          
         )}
 
         {section === 'wallet' && (
@@ -148,10 +149,17 @@ export default function ProfilePage() {
             paymentOption={paymentOption}
             setPaymentOption={setPaymentOption}
           />
+          
         )}
 
         {section === 'courses' && <CoursesSection />}
-        {section === 'level' && <LevelSection />}
+        {section === 'level' && (
+  <LevelSection
+    loginCount={user?.loginCount || 0}
+    lastLogin={user?.lastLogin || null}
+  />
+)}
+
       </main>
     </div>
   );
