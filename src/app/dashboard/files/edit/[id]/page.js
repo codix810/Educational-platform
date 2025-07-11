@@ -62,29 +62,23 @@ export default function EditFilePage() {
       setMessage({ text: ' حصل خطأ في الاتصال بالسيرفر', type: 'error' });
     }
   };
-
-  if (loading)
-  return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="flex gap-2">
+ if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-[#F9FAFB]">
         <motion.div
-          className="w-3 h-3 bg-gray-600 rounded-full"
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
-        />
-        <motion.div
-          className="w-3 h-3 bg-gray-600 rounded-full"
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
-        />
-        <motion.div
-          className="w-3 h-3 bg-gray-600 rounded-full"
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
-        />
+          className="flex gap-2"
+          animate={{ opacity: [0.3, 1, 0.3] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+          <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+          <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+        </motion.div>
       </div>
-    </div>
-  );
+    );
+  }
+
+ 
 
   if (!file) return <div className="text-center mt-10 text-red-500">الملف غير موجود</div>;
 
