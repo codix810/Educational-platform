@@ -26,10 +26,10 @@ export default function AddCoursePage() {
     
     setTimeout(() => setLoading(false), 1000); // أنيميشن وهمي للتحميل
   }, [router]);
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+// @ts-ignore
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  setForm({ ...form, [e.target.name]: e.target.value });
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
