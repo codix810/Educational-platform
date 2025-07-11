@@ -1,27 +1,35 @@
 // @ts-ignore
 
 "use client";
+
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { EnvelopeIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import { useAdminGuard } from '../../../../hooks/useAdminGuard';
 
+// ✅⬇️ هنا نحط النوع فوق قبل أي استخدام ليه
+type Device = {
+  email: string;
+  devices?: {
+    deviceId: string;
+    userAgent: string;
+    lastUsed: string;
+  }[];
+};
+
 export default function DevicesPage() {
       useAdminGuard(); // ✅ حماية الأدمن فقط
 
-  const [deviceData, setDeviceData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
+  const [deviceData, setDeviceData] = useState<Device[]>([]);
+  const [filteredData, setFilteredData] = useState<Device[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-
-      
   // ✅ تحميل الأجهزة
   useEffect(() => {
 
-  
     fetch('/api/devices')
       .then((res) => res.json())
       .then((data) => {
