@@ -5,6 +5,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAdminGuard } from '../../../../../../hooks/useAdminGuard';
+import { motion } from 'framer-motion';
+
 
 export default function EditFilePage() {
 
