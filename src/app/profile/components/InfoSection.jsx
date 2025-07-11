@@ -1,24 +1,49 @@
+// @ts-ignore
 'use client';
 
-import { useState } from 'react';
+import { ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
 import { PencilIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
 
-export default function InfoSection({ user, formData, setFormData, editing, setEditing, handleSave }) {
+type Props = {
+  user: {
+    createdAt: string;
+    loginCount?: number;
+    lastLogin?: string;
+  };
+  formData: {
+    name: string;
+    email: string;
+    phone: string;
+    image: string;
+  };
+  setFormData: React.Dispatch<React.SetStateAction<{
+    name: string;
+    email: string;
+    phone: string;
+    image: string;
+  }>>;
+  editing: boolean;
+  setEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  handleSave: () => void;
+  handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleImageChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleLogout: () => void;
+};
+
+export default function InfoSection({
+  user,
+  formData,
+  setFormData,
+  editing,
+  setEditing,
+  handleSave,
+  handleInputChange,
+  handleImageChange,
+  handleLogout,
+}: Props) {
   const router = useRouter();
-
-  const handleInputChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) setFormData({ ...formData, image: URL.createObjectURL(file) });
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    router.push('/Login');
-  };
 
   return (
     <motion.div
