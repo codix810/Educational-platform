@@ -1,11 +1,9 @@
-
+// middleware.js
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import { jwtVerify } from 'jose';
 
-export function middleware(request) {
+export async function middleware(request) {
   const token = request.cookies.get('token')?.value;
-
-
   const url = request.nextUrl;
 
   const isAdminPath = url.pathname.startsWith('/dashboard');
@@ -16,12 +14,14 @@ export function middleware(request) {
 
   if (isAdminPath && token) {
     try {
-      const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-      if (decoded.role !== 'admin') {
+      const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+      const { payload } = await jwtVerify(token, secret);
+
+      if (payload.role !== 'admin') {
         return NextResponse.redirect(new URL('/', request.url));
       }
     } catch (err) {
-      console.error('❌ JWT Error:', err);
+      console.error('JWT Verify Error:', err);
       return NextResponse.redirect(new URL('/login', request.url));
     }
   }
@@ -29,7 +29,6 @@ export function middleware(request) {
   return NextResponse.next();
 }
 
-// ✅ هنا نحط الماتشر بتاع المسارات المحمية فقط
 export const config = {
   matcher: ['/dashboard/:path*', '/addcourse', '/devices'],
 };
