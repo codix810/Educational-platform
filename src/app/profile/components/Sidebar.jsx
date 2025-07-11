@@ -9,7 +9,10 @@ import {
 } from '@heroicons/react/24/outline';
 
 /**
- * @param {{ currentSection: string, onSectionChange: (section: string) => void }} props
+ * @param {{
+ *  currentSection: 'courses' | 'info' | 'wallet' | 'level',
+ *  onSectionChange: (section: 'courses' | 'info' | 'wallet' | 'level') => void
+ * }} props
  */
 export default function Sidebar({ currentSection, onSectionChange }) {
   const navItems = [
