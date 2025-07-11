@@ -6,31 +6,7 @@ import { motion } from 'framer-motion';
 import { PencilIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
 
-type Props = {
-  user: {
-    createdAt: string;
-    loginCount?: number;
-    lastLogin?: string;
-  };
-  formData: {
-    name: string;
-    email: string;
-    phone: string;
-    image: string;
-  };
-  setFormData: React.Dispatch<React.SetStateAction<{
-    name: string;
-    email: string;
-    phone: string;
-    image: string;
-  }>>;
-  editing: boolean;
-  setEditing: React.Dispatch<React.SetStateAction<boolean>>;
-  handleSave: () => void;
-  handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleImageChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleLogout: () => void;
-};
+
 
 export default function InfoSection({
   user,
@@ -42,7 +18,8 @@ export default function InfoSection({
   handleInputChange,
   handleImageChange,
   handleLogout,
-}: Props) {
+}) {
+
   const router = useRouter();
 
   return (
