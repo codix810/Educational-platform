@@ -8,7 +8,7 @@ import { EnvelopeIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import { useAdminGuard } from '../../../../hooks/useAdminGuard';
 
-// ✅⬇️ هنا نحط النوع فوق قبل أي استخدام ليه
+//  هنا نحط النوع فوق قبل أي استخدام ليه
 type Device = {
   email: string;
   devices?: {
@@ -19,7 +19,7 @@ type Device = {
 };
 
 export default function DevicesPage() {
-      useAdminGuard(); // ✅ حماية الأدمن فقط
+      useAdminGuard(); //  حماية الأدمن فقط
 
   const [deviceData, setDeviceData] = useState<Device[]>([]);
   const [filteredData, setFilteredData] = useState<Device[]>([]);
@@ -40,7 +40,7 @@ export default function DevicesPage() {
       });
   }, []);
 
-  // ✅ البحث بالإيميل
+  //  البحث بالإيميل
   useEffect(() => {
     const filtered = deviceData.filter((u) =>
       u.email.toLowerCase().includes(search.toLowerCase())
@@ -86,13 +86,14 @@ export default function DevicesPage() {
         <div className="bg-[#FCE4EC] text-[#AD1457] p-4 rounded-lg shadow text-center">
           <p className="text-sm">عدد الأجهزة</p>
           <p className="text-2xl font-bold">
-            {deviceData.reduce((acc, u) => acc + (u.devices?.length || 0), 0)}
+              {deviceData.filter((u) => Array.isArray(u.devices) && u.devices.length > 0).length}
           </p>
+
         </div>
         <div className="bg-[#E8F5E9] text-[#2E7D32] p-4 rounded-lg shadow text-center">
           <p className="text-sm">عدد المستخدمين النشطين</p>
           <p className="text-2xl font-bold">
-            {deviceData.filter((u) => u.devices?.length > 0).length}
+              {deviceData.filter((u) => Array.isArray(u.devices) && u.devices.length > 0).length}
           </p>
         </div>
       </motion.div>
