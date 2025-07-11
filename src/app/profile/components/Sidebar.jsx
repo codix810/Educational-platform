@@ -9,9 +9,13 @@ import {
 } from '@heroicons/react/24/outline';
 
 /**
+ * @typedef {'info' | 'wallet' | 'courses' | 'level'} SectionType
+ */
+
+/**
  * @param {{
- *  currentSection: 'courses' | 'info' | 'wallet' | 'level',
- *  onSectionChange: (section: 'courses' | 'info' | 'wallet' | 'level') => void
+ *   currentSection: SectionType,
+ *   onSectionChange: (section: SectionType) => void
  * }} props
  */
 export default function Sidebar({ currentSection, onSectionChange }) {
