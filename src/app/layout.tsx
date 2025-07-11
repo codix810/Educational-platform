@@ -1,5 +1,5 @@
-"use client";
-
+// @ts-ignore
+'use client';
 import Link from 'next/link';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import {
@@ -10,9 +10,10 @@ import {
 import { useEffect, useState, Fragment } from 'react';
 import { useRouter } from 'next/navigation';
 import './globals.css';
+import { ReactNode } from 'react';
 
 
-export default function RootLayout({ children }) {
+  export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState(null);
   const router = useRouter();
   const [activeAdmin, setActiveAdmin] = useState('');
