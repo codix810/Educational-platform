@@ -37,10 +37,11 @@ export default function CoursesPage() {
     fetchData();
   }, [router]);
 
-  const showMessage = (text, type = 'success') => {
-    setMessage({ text, type });
-    setTimeout(() => setMessage({ text: '', type: '' }), 3000);
-  };
+
+const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
+  setMessage({ text, type });
+  setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+};
 
   const handleBuy = async () => {
     if (!selectedCourse || !user) return;
