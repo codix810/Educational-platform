@@ -2,20 +2,29 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { motion } from 'framer-motion';
+
+// تعريف شكل بيانات الامتحان
+interface Exam {
+  _id: string;
+  title: string;
+  questions: {
+    question: string;
+    options: string[];
+    answer: string;
+  }[];
+}
 
 export default function ExamPage() {
   const { id } = useParams(); // course ID
   const router = useRouter();
 
-  const [exams, setExams] = useState([]);
-  const [selectedExam, setSelectedExam] = useState(null);
-  const [answers, setAnswers] = useState({});
+  const [exams, setExams] = useState<Exam[]>([]);
+  const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
+  const [answers, setAnswers] = useState<{ [key: number]: string }>({});
   const [hasSubmitted, setHasSubmitted] = useState(false);
-  const [score, setScore] = useState(null);
-  const [userId, setUserId] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
-  const [loading] = useState(true);
+  const [score, setScore] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string>("");
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
   useEffect(() => {
     const checkPurchaseAndFetchExams = async () => {
@@ -42,7 +51,7 @@ export default function ExamPage() {
     checkPurchaseAndFetchExams();
   }, [id, router]);
 
-  const checkIfSubmitted = async (exam) => {
+  const checkIfSubmitted = async (exam: Exam) => {
     const res = await fetch(`/api/exam-results?userId=${userId}&courseId=${id}&examId=${exam._id}`);
     const data = await res.json();
 
@@ -58,60 +67,44 @@ export default function ExamPage() {
     setSelectedExam(exam);
   };
 
-  const handleAnswerChange = (qIndex, selected) => {
+  const handleAnswerChange = (qIndex: number, selected: string) => {
     if (hasSubmitted) return;
     setAnswers(prev => ({ ...prev, [qIndex]: selected }));
   };
 
-const handleSubmit = async () => {
-  if (!selectedExam) return;
+  const handleSubmit = async () => {
+    if (!selectedExam) return;
 
-  const unanswered = selectedExam.questions.some((_, i) => !answers[i]);
-  if (unanswered) {
-    setErrorMsg("❗ من فضلك، أجب على جميع الأسئلة قبل إرسال الامتحان.");
-    return;
-  }
+    const unanswered = selectedExam.questions.some((_, i) => !answers[i]);
+    if (unanswered) {
+      setErrorMsg("❗ من فضلك، أجب على جميع الأسئلة قبل إرسال الامتحان.");
+      return;
+    }
 
-  setErrorMsg(""); // امسح الرسالة لو كله تمام
+    setErrorMsg("");
 
-  let correctCount = 0;
-  selectedExam.questions.forEach((q, i) => {
-    if (answers[i] === q.answer) correctCount++;
-  });
+    let correctCount = 0;
+    selectedExam.questions.forEach((q, i) => {
+      if (answers[i] === q.answer) correctCount++;
+    });
 
-  const scoreValue = `${correctCount} / ${selectedExam.questions.length}`;
+    const scoreValue = `${correctCount} / ${selectedExam.questions.length}`;
 
-  await fetch("/api/exam-results", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      userId,
-      courseId: id,
-      examId: selectedExam._id,
-      answers,
-      score: scoreValue,
-    })
-  });
+    await fetch("/api/exam-results", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId,
+        courseId: id,
+        examId: selectedExam._id,
+        answers,
+        score: scoreValue,
+      })
+    });
 
-  setScore(scoreValue);
-  setHasSubmitted(true);
-};
-
-if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <motion.div
-          className="flex gap-2"
-          animate={{ opacity: [0.3, 1, 0.3] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        >
-          <div className="w-3 h-3 bg-gray-600 rounded-full"></div>
-          <div className="w-3 h-3 bg-gray-600 rounded-full"></div>
-          <div className="w-3 h-3 bg-gray-600 rounded-full"></div>
-        </motion.div>
-      </div>
-    );
-  }
+    setScore(scoreValue);
+    setHasSubmitted(true);
+  };
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-10 space-y-8">
@@ -128,9 +121,10 @@ if (loading) {
               لقد قمت بحل هذا الامتحان مسبقًا. درجتك: {score}
             </p>
           )}
-{errorMsg && (
-  <p className="text-red-600 font-semibold mb-4">{errorMsg}</p>
-)}
+
+          {errorMsg && (
+            <p className="text-red-600 font-semibold mb-4">{errorMsg}</p>
+          )}
 
           {selectedExam.questions.map((q, i) => (
             <div key={i} className="mb-6">
