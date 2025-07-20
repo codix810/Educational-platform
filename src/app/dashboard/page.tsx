@@ -24,6 +24,7 @@ type User = {
   createdAt: string;
   loginCount?: number;
   password?: string;
+  balance?: number; // ✅ أضف هذا السطر
 };
 
 type Course = {
