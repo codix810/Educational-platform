@@ -1,16 +1,35 @@
-// app/watch/[id]/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 
+interface Course {
+  _id: string;
+  title: string;
+  description: string;
+}
+
+interface FileItem {
+  _id: string;
+  title: string;
+  originalName: string;
+  sizeMB: number;
+  url: string;
+}
+
+interface Exam {
+  _id: string;
+  title: string;
+}
+
 export default function WatchCoursePage() {
   const { id } = useParams();
   const router = useRouter();
-  const [course, setCourse] = useState(null);
-  const [files, setFiles] = useState([]);
-  const [exams, setExams] = useState([]);
+
+  const [course, setCourse] = useState<Course | null>(null);
+  const [files, setFiles] = useState<FileItem[]>([]);
+  const [exams, setExams] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -96,25 +115,24 @@ export default function WatchCoursePage() {
         )}
       </div>
 
- <div className="flex items-center justify-between">
-  <div className="flex gap-4">
-    <button
-      onClick={() => router.push(`/watch/${id}/videos`)}
-      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow"
-    >
-      مشاهدة الفيديوهات
-    </button>
-    {exams.length > 0 && (
-      <button
-        onClick={() => router.push(`/watch/${id}/exams`)}
-        className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded shadow"
-      >
-        دخول الامتحان
-      </button>
-    )}
-  </div>
-</div>
-</div>
-
+      <div className="flex items-center justify-between">
+        <div className="flex gap-4">
+          <button
+            onClick={() => router.push(`/watch/${id}/videos`)}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow"
+          >
+            مشاهدة الفيديوهات
+          </button>
+          {exams.length > 0 && (
+            <button
+              onClick={() => router.push(`/watch/${id}/exams`)}
+              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded shadow"
+            >
+              دخول الامتحان
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
