@@ -49,6 +49,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     { name: 'Videos', href: '/dashboard/videos' },
     { name: 'Exams', href: '/dashboard/exams' },
     { name: 'files', href: '/dashboard/files' },
+    { name: 'Wallet', href: '/dashboard/Wallet' },
+
   ];
 
   return (
