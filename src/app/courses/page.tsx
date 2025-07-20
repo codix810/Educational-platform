@@ -6,13 +6,29 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { CheckCircle2, XCircle } from 'lucide-react';
 
+type Course = {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  image?: string;
+};
+
+type User = {
+  _id: string;
+  balance: number;
+};
+
 export default function CoursesPage() {
-  const [courses, setCourses] = useState([]);
-  const [user, setUser] = useState(null);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [message, setMessage] = useState({ text: '', type: '' });
+  const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' | '' }>({
+    text: '',
+    type: ''
+  });
   const [search, setSearch] = useState('');
   const [successAnimation, setSuccessAnimation] = useState(false);
   const router = useRouter();
@@ -24,7 +40,7 @@ export default function CoursesPage() {
       const parsed = JSON.parse(savedUser);
 
       const userRes = await fetch(`/api/users/${parsed._id}`);
-      const freshUser = await userRes.json();
+      const freshUser: User = await userRes.json();
       setUser(freshUser);
 
       const coursesRes = await fetch('/api/courses');
@@ -37,11 +53,10 @@ export default function CoursesPage() {
     fetchData();
   }, [router]);
 
-
-const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
-  setMessage({ text, type });
-  setTimeout(() => setMessage({ text: '', type: '' }), 3000);
-};
+  const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
+    setMessage({ text, type });
+    setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+  };
 
   const handleBuy = async () => {
     if (!selectedCourse || !user) return;
@@ -53,7 +68,7 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
     });
     const result = await hasPurchased.json();
 
-    setModalOpen(false); // close modal first
+    setModalOpen(false);
 
     if (result.exists) {
       setTimeout(() => {
@@ -78,7 +93,7 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
     });
 
     if (purchaseRes.ok) {
-      const updatedUser = await fetch(`/api/users/${user._id}`).then((res) => res.json());
+      const updatedUser: User = await fetch(`/api/users/${user._id}`).then((res) => res.json());
       setUser(updatedUser);
       setSuccessAnimation(true);
       setTimeout(() => setSuccessAnimation(false), 4000);
@@ -91,7 +106,7 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
     course.title.toLowerCase().includes(search.toLowerCase())
   );
 
-if (loading) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <motion.div
@@ -155,20 +170,19 @@ if (loading) {
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
           >
-            <h2 className="text-2xl font-bold text-green-700 mb-2"> مبروك!</h2>
-            <p className="text-gray-700 mb-4">تم شراء الكورس بنجاح، استمتع بمشاهدته </p>
+            <h2 className="text-2xl font-bold text-green-700 mb-2">مبروك!</h2>
+            <p className="text-gray-700 mb-4">تم شراء الكورس بنجاح، استمتع بمشاهدته</p>
             <button
               onClick={() => setSuccessAnimation(false)}
               className="mt-4 px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded shadow"
             >
               مشاهدة الكورسات
             </button>
-            
           </motion.div>
         </motion.div>
       )}
 
-      {modalOpen && (
+      {modalOpen && selectedCourse && user && (
         <motion.div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
           initial={{ opacity: 0 }}
@@ -180,8 +194,8 @@ if (loading) {
             animate={{ scale: 1 }}
           >
             <h2 className="text-lg font-bold mb-4 text-gray-800">هل أنت متأكد من شراء الكورس؟</h2>
-            <p className="mb-2 text-gray-600">رصيدك الحالي: {user?.balance} جنيه</p>
-            <p className="text-gray-800 font-medium mb-4">سعر الكورس: {selectedCourse?.price} جنيه</p>
+            <p className="mb-2 text-gray-600">رصيدك الحالي: {user.balance} جنيه</p>
+            <p className="text-gray-800 font-medium mb-4">سعر الكورس: {selectedCourse.price} جنيه</p>
             <div className="flex justify-center gap-4 mt-4">
               <button
                 onClick={() => setModalOpen(false)}
@@ -192,11 +206,11 @@ if (loading) {
               <button
                 onClick={handleBuy}
                 className={`px-4 py-2 rounded text-white transition ${
-                  user?.balance < selectedCourse?.price
+                  user.balance < selectedCourse.price
                     ? 'bg-gray-400 cursor-not-allowed'
                     : 'bg-green-500 hover:bg-green-600'
                 }`}
-                disabled={user?.balance < selectedCourse?.price}
+                disabled={user.balance < selectedCourse.price}
               >
                 تأكيد الشراء
               </button>
