@@ -38,18 +38,21 @@ export async function POST(req) {
 
 //  GET: جلب الامتحانات حسب الكورس
 export async function GET(req) {
-  const url = new URL(req.url);
-  const courseId = url.searchParams.get("courseId");
-
   try {
+    const url = new URL(req.url);
+    const courseId = url.searchParams.get("courseId");
+
     const client = await clientPromise;
     const db = client.db();
 
-    const exams = await db.collection("exams").find({ courseId }).toArray();
+    // لو فيه courseId نفلتر، لو مفيش نجيب الكل
+    const query = courseId ? { courseId } : {};
+
+    const exams = await db.collection("exams").find(query).toArray();
 
     return NextResponse.json({ exams });
   } catch (error) {
-    console.error(error);
+    console.error('❌ Error fetching exams:', error);
     return NextResponse.json({ error: "Error fetching exams" }, { status: 500 });
   }
 }
