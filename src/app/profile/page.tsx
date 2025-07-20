@@ -80,12 +80,12 @@ export default function ProfilePage() {
       if (res.ok) {
         setUser((prev) => (prev ? { ...prev, ...formData } : null));
         setEditing(false);
-        showMessage('✅ تم حفظ التعديلات بنجاح', 'success');
+        showMessage(' تم حفظ التعديلات بنجاح', 'success');
       } else {
         showMessage(data.message, 'error');
       }
     } catch (err) {
-      showMessage('❌ فشل حفظ التعديلات', 'error');
+      showMessage(' فشل حفظ التعديلات', 'error');
     }
   };
 

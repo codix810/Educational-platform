@@ -51,11 +51,15 @@ const body = await req.json();
   }
 }
 
-export async function GET() {
+// ✅ GET: جلب الملفات حسب الكورس
+export async function GET(req) {
   try {
     const client = await clientPromise;
     const db = client.db();
-    const files = await db.collection('files').find().toArray();
+    const courseId = req.nextUrl.searchParams.get('courseId');
+
+    const query = courseId ? { courseId } : {};
+    const files = await db.collection('files').find(query).toArray();
 
     return NextResponse.json({ files });
   } catch (error) {

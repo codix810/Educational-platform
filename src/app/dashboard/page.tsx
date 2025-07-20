@@ -240,6 +240,7 @@ export default function AdminDashboard() {
                   <th className="border px-4 py-2">الدور</th>
                   <th className="border px-4 py-2">تم الإنشاء</th>
                   <th className="border px-4 py-2">عدد الدخول</th>
+                  <th className="border px-4 py-2">رصيد </th>
                   <th className="border px-4 py-2">كلمة السر</th>
                   <th className="border px-4 py-2">تحكم</th>
                 </tr>
@@ -271,6 +272,7 @@ export default function AdminDashboard() {
                     </td>
                     <td className="border px-4 py-2">{new Date(u.createdAt).toLocaleDateString()}</td>
                     <td className="border px-4 py-2">{u.loginCount || 0}</td>
+                    <td className="border px-4 py-2">{u.balance || 0}</td>
                     <td className="border px-4 py-2 flex items-center justify-center gap-2">
                       {showPassword === u._id ? u.password : '••••'}
                       <button

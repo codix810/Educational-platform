@@ -83,3 +83,35 @@ export async function DELETE(req, { params }) {
     return NextResponse.json({ message: 'Delete failed' }, { status: 500 });
   }
 }
+export async function PATCH(req, { params }) {
+  try {
+    const client = await clientPromise;
+    const db = client.db();
+    const collection = db.collection('users');
+
+    const id = params.id;
+    const body = await req.json();
+
+    if (!ObjectId.isValid(id)) {
+      return NextResponse.json({ message: 'Invalid ID' }, { status: 400 });
+    }
+
+    const updateFields = {};
+    if (body.balance !== undefined) updateFields.balance = body.balance;
+    if (body.purchasedCourses !== undefined) updateFields.purchasedCourses = body.purchasedCourses;
+
+    const result = await collection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: updateFields }
+    );
+
+    if (result.matchedCount === 0) {
+      return NextResponse.json({ message: 'User not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: 'User updated successfully' });
+  } catch (error) {
+    console.error('❌ Error in PATCH /api/users/[id]:', error);
+    return NextResponse.json({ message: 'Update failed' }, { status: 500 });
+  }
+}
