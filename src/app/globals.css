@@ -29,3 +29,4 @@ font-size: 18px;
 .btn-custom {
   @apply bg-[#B2CDB9] hover:bg-[#EDF8ED]  ;
 }
+

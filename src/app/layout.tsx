@@ -12,6 +12,7 @@ import {
 import { useEffect, useState, Fragment, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import './globals.css';
+import Footer from '../Components/Footer'
 
 type UserType = {
   role: string;
@@ -38,9 +39,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   };
 
   const userLinks = [
-    { name: 'كورسات', href: '/courses' },
-    { name: 'مرسين', href: '/mentors' },
-    { name: 'تواصل معنا', href: '/contact' },
+    { name: 'Home', href: '/' },
+    { name: 'Courses', href: '/courses' },
+    { name: 'Mentors', href: '/mentors' },
+    { name: 'Contact US ', href: '/contact' },
+    { name: 'About ', href: '/about' },
   ];
 
   const adminLinks = [
@@ -56,13 +59,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="bg-[#f3f4f6] font-sans">
-        <Disclosure as="nav" className="bg-gradient-to-r from-[#7CA982] to-[#B2CDB9] shadow">
+        <Disclosure as="nav" className="bg-gradient-to-r from-[#7CA982] to-[#B2CDB9] shadow-md">
           {({ open }) => (
             <>
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
-                  <Link href="/" className="text-white font-extrabold text-xl tracking-wide">
-                    CodiX
+                  <Link href="/" className="text-white font-bold text-3xl tracking-wide">
+                    Codi<span className='text-[#8adb9e]'>X</span> 
                   </Link>
 
                   {isAdmin && (
@@ -193,6 +196,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </Disclosure>
 
         <main>{children}</main>
+       <Footer/>
       </body>
     </html>
   );
