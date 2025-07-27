@@ -1,103 +1,98 @@
-"use client";
+'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdAccessTime, MdOutlinePlayLesson } from "react-icons/md";
 import { PiStudentFill } from "react-icons/pi";
-import { FaStar, FaCircleArrowRight } from "react-icons/fa6";
-import { FaStarHalfAlt } from "react-icons/fa";
-import Image from 'next/image';
+import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-
-import cs from '../../public/img/09/course1.jpeg';
-import UIUX from '../../public/img/09/UI-UX.jpg';
-import Graphic from '../../public/img/09/Graphic.jpg';
-import MarktingDigital from '../../public/img/09/digital.jpg';
-import Art from '../../public/img/09/Art.jpeg';
 import Link from 'next/link';
 
-const coursesData = [
-  {
-    id: 1,
-    category: "Ui / Ux",
-    title: "Become a UX / UI Designer Professional.",
-    teacher: "Dr. Malek Omar",
-    duration: "5hr 30min",
-    lessons: 13,
-    img: UIUX,
-    students: "3.5k",
-    price: "$299",
-    rating: 4.9,
-  },
-  {
-    id: 2,
-    category: "Graphic",
-    title: "Master Graphic Design in 2025.",
-    teacher: "Dr. Sarah Ali",
-    duration: "6hr 10min",
-    lessons: 15,
-    img: Graphic,
-    students: "4k",
-    price: "$349",
-    rating: 4.8,
-  },
-  {
-    id: 3,
-    category: "Development",
-    title: "Full Stack Web Developer Bootcamp.",
-    teacher: "Dr. Ahmed Nabil",
-    duration: "8hr 45min",
-    lessons: 20,
-    img: cs,
-    students: "5k",
-    price: "$499",
-    rating: 4.7,
-  },
-  {
-    id: 4,
-    category: "Digital",
-    title: "Digital Marketing Masterclass",
-    teacher: "Dr. Ahmed Nabil",
-    duration: "10hr",
-    lessons: 25,
-    img: MarktingDigital,
-    students: "6k",
-    price: "$599",
-    rating: 4.9,
-  },
-  {
-    id: 5,
-    category: "Art & Craft",
-    title: "Advanced Art & Craft Course.",
-    teacher: "Dr. Rana Salem",
-    duration: "4hr",
-    lessons: 12,
-    img: Art,
-    students: "3k",
-    price: "$399",
-    rating: 4.8,
-  },
-];
-
-const categories = ["ALL", "Graphic", "Ui / Ux", "Digital", "Art & Craft", "Development"];
-
 const CardCourse = () => {
+  const [courses, setCourses] = useState([]);
+  const [purchases, setPurchases] = useState([]);
+  const [videos, setVideos] = useState({});
+  const [durations, setDurations] = useState({});
+  const [exams, setExams] = useState({});
+  const [teachers, setTeachers] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [categories, setCategories] = useState(["ALL"]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [courseRes, purchaseRes, teacherRes] = await Promise.all([
+          fetch('/api/courses'),
+          fetch('/api/purchases/all'),
+          fetch('/api/users'),
+        ]);
+
+        const courseData = await courseRes.json();
+        const purchaseData = await purchaseRes.json();
+        const teacherData = await teacherRes.json();
+
+        const fetchedCourses = courseData.courses || [];
+        setCourses(fetchedCourses);
+        setPurchases(purchaseData || []);
+        setTeachers((teacherData.users || []).filter(u => u.role === 'teacher'));
+
+        const allCategories = Array.from(new Set(fetchedCourses.map(c => c.category))).filter(Boolean);
+        setCategories(["ALL", ...allCategories]);
+
+        const videoCounts = {};
+        const durationMap = {};
+        const examCounts = {};
+
+        await Promise.all(
+          fetchedCourses.map(async (course) => {
+            const v = await fetch(`/api/videos?courseId=${course._id}`);
+            const vData = await v.json();
+            const vids = vData?.videos || [];
+            videoCounts[course._id] = vids.length;
+
+            const totalDuration = vids.reduce((sum, vid) => sum + Number(vid.duration || 0), 0);
+            durationMap[course._id] = totalDuration.toFixed(1);
+
+            const e = await fetch(`/api/exams?courseId=${course._id}`);
+            const eData = await e.json();
+            examCounts[course._id] = eData?.exams?.length || 0;
+          })
+        );
+
+        setVideos(videoCounts);
+        setDurations(durationMap);
+        setExams(examCounts);
+
+      } catch (err) {
+        console.error("❌ فشل تحميل البيانات:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const filteredCourses =
     selectedCategory === "ALL"
-      ? coursesData
-      : coursesData.filter(course => course.category === selectedCategory);
+      ? courses
+      : courses.filter(course => course.category === selectedCategory);
+
+  const getStudentCount = (courseId) => {
+    return purchases.filter(p => String(p.courseId) === String(courseId)).length;
+  };
+
+  const getTeacherName = (teacherId) => {
+    const teacher = teachers.find(t => t._id === teacherId);
+    return teacher ? teacher.name : 'مدرس غير معروف';
+  };
 
   return (
     <div className="bg-gray-50 py-12">
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-center mb-8">Our Upcoming Courses</h1>
+        <h1 className="text-3xl font-bold text-center mb-8">الكورسات المتاحة</h1>
 
-        {/* Filter system */}
         <div className="flex flex-wrap justify-center gap-4 mb-12">
           {categories.map((cat, index) => (
             <button
@@ -114,7 +109,6 @@ const CardCourse = () => {
           ))}
         </div>
 
-        {/* Swiper Slider */}
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
           spaceBetween={30}
@@ -127,59 +121,62 @@ const CardCourse = () => {
             1024: { slidesPerView: 3 },
           }}
         >
-          {filteredCourses.map((course, index) => (
-            <SwiperSlide key={`${course.id}-${index}`}>
+          {filteredCourses.map((course) => (
+            <SwiperSlide key={course._id}>
               <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:scale-105 transition">
-                {/* Image */}
                 <div className="bg-gray-200">
-                    <Link href='/courses' className='cursor-pointer '>
-                     <Image src={course.img} alt={course.title} className="w-full h-44 object-cover"/>
-                    </Link>
+                  <Link href={`/watch/${course._id}`}>
+                    <img
+                      src={course.image}
+                      alt={course.title}
+                      width={400}
+                      height={200}
+                      className="w-full h-44 object-cover"
+                    />
+                  </Link>
                 </div>
 
-                {/* Details */}
                 <div className="p-4">
-                  <Link href='/courses' className='cursor-pointer '>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-semibold text-[#7CA982]">{course.category}</span>
-                    <span className="text-sm font-bold text-gray-800">{course.price}</span>
-                  </div>
-                  <h3 className="text-lg font-bold mb-1">{course.title}</h3>
-                  <p className="text-sm text-gray-600 mb-4">By {course.teacher}</p>
+                  <Link href={`/watch/${course._id}`}>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-semibold text-[#7CA982]">{course.category}</span>
+                      <span className="text-sm font-bold text-gray-800">{course.price} جنيه</span>
+                    </div>
 
-                  {/* Details course */}
-                  <div className="flex justify-between text-sm text-gray-600 mb-4">
-                    <div className="flex items-center gap-1">
-                      <MdAccessTime />
-                      <p>{course.duration}</p>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <MdOutlinePlayLesson />
-                      <p>{course.lessons} lessons</p>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <PiStudentFill />
-                      <p>+{course.students} students</p>
-                    </div>
-                  </div>
+                    <h3 className="text-lg font-bold mb-1">{course.title}</h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      مدرس الكورس: {getTeacherName(course.teacherId)}
+                    </p>
 
-                  {/* Stars and arrow */}
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center text-yellow-500">
-                      <FaStar /><FaStar /><FaStar /><FaStar /><FaStarHalfAlt />
-                      <div className="text-gray-800 ml-2">{course.rating}</div>
+                    <div className="flex justify-between text-sm text-gray-600 mb-4">
+                      <div className="flex items-center gap-1">
+                        <MdAccessTime />
+                        <p>{durations[course._id] || '—'} دقيقة</p>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <MdOutlinePlayLesson />
+                        <p>{videos[course._id] || 0} دروس</p>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <PiStudentFill />
+                        <p>+{getStudentCount(course._id)} طلاب</p>
+                      </div>
                     </div>
-                    {/* <Link href='/courses' className='cursor-pointer '>
-                    <FaCircleArrowRight size={30} className="text-[#7CA982] text-2xl cursor-pointer" />
-                    </Link> */}
-                  </div>
+
+                    <p className="text-sm text-purple-600 mb-2"> عدد الامتحانات: {exams[course._id] || 0}</p>
+
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center text-yellow-500">
+                        <FaStar /><FaStar /><FaStar /><FaStar /><FaStarHalfAlt />
+                        <div className="text-gray-800 ml-2">{course.rating || 4.5}</div>
+                      </div>
+                    </div>
                   </Link>
                 </div>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
-
       </div>
     </div>
   );
