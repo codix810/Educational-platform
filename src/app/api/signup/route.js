@@ -7,11 +7,28 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 export async function POST(request) {
   try {
-    const { name, email, password, phone, role } = await request.json();
+    const {
+      name,
+      email,
+      password,
+      phone,
+      role,
+      image,       // 🆕 صورة المدرس
+      subject,     // 🆕 تخصص المدرس
+      experience   // 🆕 عدد سنوات الخبرة
+    } = await request.json();
+
     const createdAt = new Date();
 
-    if (!name || !email || !password || !phone) {
+    if (!name || !email || !password || !phone || !role) {
       return NextResponse.json({ message: 'كل البيانات مطلوبة' }, { status: 400 });
+    }
+
+    // لو مدرس لازم يكون رافع صورة وكاتب التخصص والخبرة
+    if (role === 'teacher') {
+      if (!image || !subject || !experience) {
+        return NextResponse.json({ message: 'برجاء إدخال جميع بيانات المدرس' }, { status: 400 });
+      }
     }
 
     const client = await clientPromise;
@@ -28,14 +45,23 @@ export async function POST(request) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const result = await users.insertOne({
+    const userData = {
       name,
       email,
       phone,
       password: hashedPassword,
-      role: role === 'admin' ? 'admin' : 'user',
+      role: ['admin', 'teacher'].includes(role) ? role : 'user',
       createdAt,
-    });
+    };
+
+    // لو مدرس نضيف البيانات الإضافية
+    if (role === 'teacher') {
+      userData.image = image;
+      userData.subject = subject;
+      userData.experience = experience;
+    }
+
+    const result = await users.insertOne(userData);
 
     const token = jwt.sign(
       {
@@ -43,7 +69,7 @@ export async function POST(request) {
         name,
         email,
         phone,
-        role: role === 'admin' ? 'admin' : 'user',
+        role: userData.role,
         createdAt,
       },
       JWT_SECRET,
@@ -57,7 +83,7 @@ export async function POST(request) {
         name,
         email,
         phone,
-        role: role === 'admin' ? 'admin' : 'user',
+        role: userData.role,
         createdAt,
       }
     }, { status: 201 });
