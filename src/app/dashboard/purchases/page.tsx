@@ -4,10 +4,24 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TrashIcon } from '@heroicons/react/24/outline';
 
+type Purchase = {
+  _id: string;
+  userId: string;
+  userName: string;
+  courseTitle: string;
+  price: string;
+  createdAt: string;
+};
+
+type Message = {
+  type: 'success' | 'error';
+  text: string;
+};
+
 export default function PurchasesPage() {
-  const [purchases, setPurchases] = useState([]);
+  const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [search, setSearch] = useState('');
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [message, setMessage] = useState<Message | null>(null);
   const [loading, setLoading] = useState(true);
   const [confirmId, setConfirmId] = useState<string | null>(null);
 
@@ -32,7 +46,7 @@ export default function PurchasesPage() {
   const uniqueCourses = new Set(filteredPurchases.map(p => p.courseTitle)).size;
   const uniqueUsers = new Set(filteredPurchases.map(p => p.userName)).size;
 
-  const handleRefundAndDelete = async (purchaseId, userId, price) => {
+  const handleRefundAndDelete = async (purchaseId: string, userId: string, price: string | number) => {
     try {
       const res = await fetch(`/api/purchases/${purchaseId}`, {
         method: 'DELETE',
@@ -42,13 +56,13 @@ export default function PurchasesPage() {
       const result = await res.json();
       if (res.ok) {
         setPurchases((prev) => prev.filter((p) => p._id !== purchaseId));
-        setMessage({ type: 'success', text: ' تم حذف الكورس واسترجاع المبلغ للعميل.' });
+        setMessage({ type: 'success', text: 'تم حذف الكورس واسترجاع المبلغ للعميل.' });
       } else {
-        setMessage({ type: 'error', text: result.message || ' حدث خطأ أثناء الحذف' });
+        setMessage({ type: 'error', text: result.message || 'حدث خطأ أثناء الحذف' });
       }
     } catch (err) {
       console.error(err);
-      setMessage({ type: 'error', text: ' فشل في الاتصال بالخادم' });
+      setMessage({ type: 'error', text: 'فشل في الاتصال بالخادم' });
     }
     setConfirmId(null);
     setTimeout(() => setMessage(null), 4000);
@@ -77,10 +91,10 @@ export default function PurchasesPage() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-        <StatBox title=" عدد المشتريات" value={totalPurchases} bg="bg-blue-100" />
-        <StatBox title=" الأرباح" value={`${Math.round(totalRevenue)} جنيه`} bg="bg-green-100" />
-        <StatBox title=" الكورسات المختلفة" value={uniqueCourses} bg="bg-yellow-100" />
-        <StatBox title=" عدد المشترين" value={uniqueUsers} bg="bg-purple-100" />
+        <StatBox title="عدد المشتريات" value={totalPurchases} bg="bg-blue-100" />
+        <StatBox title="الأرباح" value={`${Math.round(totalRevenue)} جنيه`} bg="bg-green-100" />
+        <StatBox title="الكورسات المختلفة" value={uniqueCourses} bg="bg-yellow-100" />
+        <StatBox title="عدد المشترين" value={uniqueUsers} bg="bg-purple-100" />
       </div>
 
       <div className="flex items-center gap-2 w-full md:w-1/2 mx-auto">
@@ -174,10 +188,16 @@ export default function PurchasesPage() {
   );
 }
 
-function StatBox({ title, value, bg }) {
+type StatBoxProps = {
+  title: string;
+  value: string | number;
+  bg?: string;
+};
+
+function StatBox({ title, value, bg }: StatBoxProps) {
   return (
     <motion.div
-      className={`rounded-xl p-4 text-center shadow-sm ${bg}`}
+      className={`rounded-xl p-4 text-center shadow-sm ${bg || 'bg-white'}`}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
     >
