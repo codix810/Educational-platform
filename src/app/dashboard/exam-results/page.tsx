@@ -1,12 +1,23 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
 import { TrashIcon, Search } from 'lucide-react';
 
+// تعريف النوع لكل نتيجة
+type ExamResult = {
+  _id: string | { $oid: string };
+  userName: string;
+  courseTitle: string;
+  examTitle: string;
+  score: number;
+  createdAt: string;
+};
+
+// مكون الصفحة
 export default function ExamResultsPage() {
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<ExamResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -18,26 +29,34 @@ export default function ExamResultsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-const handleDelete = async (id: string | { $oid: string }) => {
-    if (!confirm('هل أنت متأكد من حذف هذه النتيجة؟')) return;
+  const handleDelete = async (id: string | { $oid: string }) => {
+    try {
+      if (!confirm('هل أنت متأكد من حذف هذه النتيجة؟')) return;
 
-    const objectId = typeof id === 'object' && id.$oid ? id.$oid : id;
+      const objectId = typeof id === 'object' && id.$oid ? id.$oid : id;
 
-    const res = await fetch(`/api/exam-results/${objectId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-store',
-      },
-    });
+      const res = await fetch(`/api/exam-results/${objectId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store',
+        },
+      });
 
-    if (res.ok) {
+      if (!res.ok) {
+        const errMsg = await res.json();
+        alert('فشل الحذف: ' + (errMsg.message || ''));
+        return;
+      }
+
       setResults((prev) =>
-        prev.filter((r) => (r._id?.$oid || r._id) !== objectId)
+        prev.filter((r) => {
+          const rId = typeof r._id === 'object' && r._id?.$oid ? r._id.$oid : r._id;
+          return rId !== objectId;
+        })
       );
-    } else {
-      const errMsg = await res.json();
-      alert('فشل الحذف: ' + (errMsg.message || ''));
+    } catch (error) {
+      console.error('Delete Error:', error);
     }
   };
 
@@ -47,7 +66,7 @@ const handleDelete = async (id: string | { $oid: string }) => {
     exam.examTitle?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const groupedByCourse = filtered.reduce((acc, item) => {
+  const groupedByCourse = filtered.reduce((acc: Record<string, ExamResult[]>, item) => {
     if (!acc[item.courseTitle]) acc[item.courseTitle] = [];
     acc[item.courseTitle].push(item);
     return acc;
@@ -132,7 +151,7 @@ const handleDelete = async (id: string | { $oid: string }) => {
                       </td>
                       <td className="border px-4 py-2">
                         <button
-                          onClick={() => handleDelete(exam._id?.$oid || exam._id)}
+                          onClick={() => handleDelete(exam._id)}
                           className="text-red-600 hover:text-red-800"
                         >
                           <TrashIcon className="w-5 h-5 mx-auto" />
@@ -150,8 +169,14 @@ const handleDelete = async (id: string | { $oid: string }) => {
   );
 }
 
-//  مكون الإحصائية مع العد المتحرك
-function StatBox({ title, value, bg }) {
+// نوع الخصائص + مكون الإحصائيات مع العدّ المتحرك
+type StatBoxProps = {
+  title: string;
+  value: number;
+  bg?: string;
+};
+
+function StatBox({ title, value, bg }: StatBoxProps) {
   return (
     <motion.div
       className={`rounded-xl p-6 text-center shadow-sm ${bg || 'bg-white'}`}
