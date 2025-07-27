@@ -8,7 +8,16 @@ export async function POST(req) {
     const db = client.db();
     const collection = db.collection('courses');
 
-    const result = await collection.insertOne(body);
+
+const result = await collection.insertOne({
+  title: body.title,
+  price: body.price,
+  description: body.description,
+  image: body.image,
+  public_id: body.public_id, // ⬅️ ضروري علشان الحذف بعدين
+  teacherId: body.teacherId,
+  createdAt: new Date(),
+});
 
     return NextResponse.json({ message: 'Course added', id: result.insertedId });
   } catch (error) {
@@ -25,7 +34,7 @@ export async function GET() {
 
     return NextResponse.json({ courses });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ message: 'Failed to fetch courses' }, { status: 500 });
-      console.log(error)
   }
 }

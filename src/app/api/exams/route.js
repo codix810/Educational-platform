@@ -10,7 +10,7 @@ export async function POST(req) {
     const collection = db.collection('exams');
 
     const body = await req.json();
-    const { courseId, questions } = body;
+    const { courseId, title, questions } = body;
 
     // تحقق من صحة البيانات
     if (!courseId || !Array.isArray(questions) || questions.length === 0) {
@@ -19,6 +19,7 @@ export async function POST(req) {
 
     const exam = {
       courseId,
+        title, // ✅ ضروري علشان $lookup في النتائج يشتغل
       questions: questions.map((q, index) => ({
         order: index + 1,
         question: q.question,
