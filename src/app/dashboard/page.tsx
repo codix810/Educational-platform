@@ -116,7 +116,9 @@ export default function AdminDashboard() {
 
     loadDashboardData();
   }, [router]);
-  const getTeacherName = (teacherId: string) => {
+
+const getTeacherName = (teacherId?: string) => {
+  if (!teacherId) return 'مدرس غير محدد';
   const teacher = users.find((u) => u._id === teacherId);
   return teacher ? teacher.name : 'مدرس غير معروف';
 };
@@ -207,7 +209,7 @@ export default function AdminDashboard() {
       {users.filter((u) => u.role === 'admin').length}
     </p>
   </div>
-    <div className="bg-[#E651] text-[#E6511e] p-4 rounded-lg shadow text-center">
+    <div className="bg-[#FFEBEE] text-[#E6511e] p-4 rounded-lg shadow text-center">
     <p className="text-sm">عدد المدرسين</p>
     <p className="text-2xl font-bold">
       {users.filter((u) => u.role === 'teacher').length}
@@ -383,7 +385,10 @@ export default function AdminDashboard() {
             className="text-center bg-white hover:bg-gray-50 transition"
           >
             <td className="border px-4 py-2">{course.title}</td>
-            <td className="border px-4 py-2">{getTeacherName(course.teacherId)}</td>
+            <td className="border px-4 py-2">
+  {course.teacherId ? getTeacherName(course.teacherId) : 'مدرس غير محدد'}
+</td>
+
             <td className="border px-4 py-2">{course.price}</td>
             <td className="border px-4 py-2">{course.description}</td>
             <td className="border px-4 py-2">
