@@ -18,7 +18,7 @@ export default function ExamResultsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleDelete = async (id) => {
+const handleDelete = async (id: string | { $oid: string }) => {
     if (!confirm('هل أنت متأكد من حذف هذه النتيجة؟')) return;
 
     const objectId = typeof id === 'object' && id.$oid ? id.$oid : id;
