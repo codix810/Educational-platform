@@ -13,7 +13,7 @@ import {
   ClipboardDocumentListIcon,
   BookOpenIcon,
 } from '@heroicons/react/24/outline';
-
+import {ArrowLeft,} from 'lucide-react';
 export default function ExamsPage() {
   const [courses, setCourses] = useState([]);
   const [exams, setExams] = useState([]);
@@ -89,14 +89,19 @@ export default function ExamsPage() {
     }
   };
 
-  const filteredCourses = courses.map(course => {
-    const courseExams = exams.filter(exam =>
-      exam.courseId === course._id &&
-      (course.title.toLowerCase().includes(search.toLowerCase()) ||
-       exam.title.toLowerCase().includes(search.toLowerCase()))
-    );
-    return { ...course, exams: courseExams };
-  }).filter(course => course.exams.length > 0);
+const filteredCourses = courses.map(course => {
+  const courseExams = exams.filter(exam =>
+    exam.courseId === course._id &&
+    (course.title.toLowerCase().includes(search.toLowerCase()) ||
+     exam.title.toLowerCase().includes(search.toLowerCase()))
+  );
+
+  return {
+    ...course,
+    exams: courseExams,
+    isMatch: courseExams.length > 0 || course.title.toLowerCase().includes(search.toLowerCase())
+  };
+}).filter(course => course.isMatch);
 
   if (loading) {
     return (
@@ -138,8 +143,11 @@ export default function ExamsPage() {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 text-center">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center bg-[white] hover:bg-[#f4f4f4] text-[#00695C] ">
+          <ArrowLeft className="w-4 h-4" /> رجوع
+        </button>      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 text-center">
         <div className="bg-blue-100 text-blue-800 rounded-xl p-4 shadow-md">
           <h3 className="text-lg font-bold">عدد الكورسات</h3>
           <p className="text-2xl">{courses.length}</p>

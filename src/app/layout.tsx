@@ -48,11 +48,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
   const adminLinks = [
     { name: 'Dashboard', href: '/dashboard' },
-    { name: 'Devices', href: '/dashboard/devices' },
-    { name: 'Videos', href: '/dashboard/videos' },
-    { name: 'Exams', href: '/dashboard/exams' },
-    { name: 'files', href: '/dashboard/files' },
-    { name: 'Wallet', href: '/dashboard/Wallet' },
+    { name: 'purchases', href: '/dashboard/purchases' },
+    { name: 'exam-results', href: '/dashboard/exam-results' },
 
   ];
 

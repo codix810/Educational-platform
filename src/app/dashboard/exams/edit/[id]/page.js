@@ -18,6 +18,7 @@ export default function EditExamPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [title, setTitle] = useState('');
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
@@ -32,6 +33,7 @@ export default function EditExamPage() {
         const data = await res.json();
         if (!res.ok) throw new Error(data.message);
         setExam(data.exam);
+        setTitle(data.exam.title || '');
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -68,8 +70,13 @@ export default function EditExamPage() {
       const res = await fetch(`/api/exams/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ questions: exam.questions }),
+        body: JSON.stringify({
+  title, // 👈 إضافة الاسم
+  questions: exam.questions,
+}),
+
       });
+      
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
       setSuccessMsg('تم تعديل الامتحان بنجاح');
@@ -100,8 +107,19 @@ export default function EditExamPage() {
         >
           <ArrowLeft className="w-4 h-4" /> رجوع
         </button>
-      </div>
 
+
+      </div>
+        <div className="mb-6">
+  <label className="block text-sm text-gray-600 mb-1">اسم الامتحان</label>
+  <input
+    type="text"
+    className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+    value={title}
+    onChange={(e) => setTitle(e.target.value)}
+    required
+  />
+</div>
       {error && (
         <div className="bg-red-100 text-red-700 px-4 py-2 rounded-md mb-4 flex items-center">
           <XCircle className="w-5 h-5 mr-2" /> {error}

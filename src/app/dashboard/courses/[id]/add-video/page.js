@@ -4,9 +4,10 @@ import { useRouter, useParams } from 'next/navigation';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAdminGuard } from '../../../../../../hooks/useAdminGuard';
+import {ArrowLeft,} from 'lucide-react';
 
 export default function AddVideoPage() {
-  useAdminGuard(); // ✅ حماية الأدمن فقط
+  useAdminGuard(); //  حماية الأدمن فقط
 
   const router = useRouter();
   const { id: courseId } = useParams();
@@ -25,7 +26,7 @@ export default function AddVideoPage() {
     setLoading(true);
 
     try {
-      // ✅ رفع الفيديو إلى Cloudinary
+      //  رفع الفيديو إلى Cloudinary
       const formData = new FormData();
       formData.append('file', videoFile);
       formData.append('upload_preset', 'unsigned_dashboard');
@@ -53,7 +54,7 @@ export default function AddVideoPage() {
     order,
     duration: formatDuration(cloudData.duration),
     courseId,
-    public_id: cloudData.public_id, // ✅ هذا صحيح ويجب أن يصل للباك
+    public_id: cloudData.public_id, //  هذا صحيح ويجب أن يصل للباك
   }),
 });
 if (!result.ok) {
@@ -61,10 +62,10 @@ if (!result.ok) {
   throw new Error(errorData.message || 'فشل في حفظ الفيديو');
 }
 
-      showToast('✅ تم إضافة الفيديو بنجاح', 'success');
+      showToast(' تم إضافة الفيديو بنجاح', 'success');
       setTimeout(() => router.push('/dashboard/videos'), 2000);
     } catch (err) {
-      showToast(err.message || '❌ حدث خطأ', 'error');
+      showToast(err.message || ' حدث خطأ', 'error');
     } finally {
       setLoading(false);
     }
@@ -104,7 +105,14 @@ if (!result.ok) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">📹 إضافة فيديو للكورس</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800"> إضافة فيديو للكورس</h2>
+        <button
+          onClick={() => router.back()}
+          className="flex items-center bg-[white] hover:bg-[#f4f4f4] text-[#00695C] ">
+          <ArrowLeft className="w-4 h-4" /> رجوع
+        </button>
+      </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-sm text-gray-700">
           <div>

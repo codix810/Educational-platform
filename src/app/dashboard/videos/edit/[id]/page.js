@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
+import {ArrowLeft,} from 'lucide-react';
 
 export default function EditVideoPage() {
   const router = useRouter();
@@ -89,9 +90,15 @@ const handleSubmit = async (e) => {
       transition={{ duration: 0.5 }}
       className="max-w-xl mx-auto mt-10 p-6 bg-[#F0F4F8] rounded-2xl shadow text-gray-800"
     >
+        <button
+          onClick={() => router.back()}
+          className="flex items-center bg-[white] hover:bg-[#f4f4f4] text-[#00695C] ">
+          <ArrowLeft className="w-4 h-4" /> رجوع
+        </button>
       <h2 className="text-2xl font-bold mb-6 text-center text-[#374151]">
         تعديل بيانات الفيديو
       </h2>
+
       <form onSubmit={handleSubmit} className="space-y-4 text-sm">
         <div>
           <label className="block mb-1 font-medium"> العنوان</label>

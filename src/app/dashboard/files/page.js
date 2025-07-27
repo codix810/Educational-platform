@@ -13,6 +13,7 @@ import {
   XCircleIcon,
   MagnifyingGlassIcon
 } from '@heroicons/react/24/outline';
+import {ArrowLeft,} from 'lucide-react';
 
 export default function FilesDashboardPage() {
   const [files, setFiles] = useState([]);
@@ -122,7 +123,7 @@ export default function FilesDashboardPage() {
       >
         لوحة إدارة الملفات
       </motion.h1>
-
+      
       <div className="relative max-w-md mx-auto mb-6">
         <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 absolute top-3 right-3" />
         <input
@@ -133,7 +134,11 @@ export default function FilesDashboardPage() {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
-
+        <button
+          onClick={() => router.back()}
+          className="flex items-center bg-[white] hover:bg-[#f4f4f4] text-[#00695C] ">
+          <ArrowLeft className="w-4 h-4" /> رجوع
+        </button>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 text-center">
         <div className="bg-blue-100 text-blue-800 rounded-xl p-4 shadow-md">
           <h3 className="text-lg font-bold">عدد الكورسات</h3>

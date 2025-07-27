@@ -109,7 +109,9 @@ if (!res.ok || !data.secure_url || !data.public_id) {
     <div className="max-w-xl mx-auto mt-10 px-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">إضافة ملف للكورس</h1>
-        <button onClick={() => router.back()} className="flex items-center gap-1 text-sm text-blue-600 hover:underline">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center bg-[white] hover:bg-[#f4f4f4] text-[#00695C] ">
           <ArrowLeft className="w-4 h-4" /> رجوع
         </button>
       </div>

@@ -33,6 +33,7 @@ type Course = {
   price: number;
   description: string;
   image?: string;
+  teacherId?: string;
 };
 
 type ConfirmModalProps = {
@@ -115,6 +116,10 @@ export default function AdminDashboard() {
 
     loadDashboardData();
   }, [router]);
+  const getTeacherName = (teacherId: string) => {
+  const teacher = users.find((u) => u._id === teacherId);
+  return teacher ? teacher.name : 'مدرس غير معروف';
+};
 
   const filteredUsers = users.filter((u) =>
     u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -180,7 +185,7 @@ export default function AdminDashboard() {
   initial={{ opacity: 0, y: -20 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.6 }}
-  className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10"
+  className="grid grid-cols-1 md:grid-cols-5 gap-5 mb-10"
 >
   <div className="bg-[#E0F2F1] text-[#00695C] p-4 rounded-lg shadow text-center">
     <p className="text-sm">إجمالي المستخدمين</p>
@@ -200,6 +205,12 @@ export default function AdminDashboard() {
     <p className="text-sm">عدد الأدمنز</p>
     <p className="text-2xl font-bold">
       {users.filter((u) => u.role === 'admin').length}
+    </p>
+  </div>
+    <div className="bg-[#E651] text-[#E6511e] p-4 rounded-lg shadow text-center">
+    <p className="text-sm">عدد المدرسين</p>
+    <p className="text-2xl font-bold">
+      {users.filter((u) => u.role === 'teacher').length}
     </p>
   </div>
 </motion.div>
@@ -226,11 +237,19 @@ export default function AdminDashboard() {
 
         {/* المستخدمين */}
         <section className="mb-20 bg-[#F3F6F4] p-6 rounded-lg shadow">
-            <div className="flex justify-between items-center mb-4">
+<div className="flex flex-wrap gap-2 justify-between items-center mb-4">
               <h2 className="text-lg font-semibold">المستخدمين</h2>
-              <button onClick={() => router.push(`/Signup`)}className="bg-[#00C853] hover:bg-[#00B342] text-white px-4 py-2 rounded shadow">إضافة مستخدم</button>
-            </div>
+<button onClick={() => router.push(`/dashboard/Wallet`)}
+  className="bg-[white] hover:bg-[#f4f4f4] text-[#00695C]  px-4 py-2 rounded shadow w-full md:w-auto"
+> Wallet</button>
 
+                <button onClick={() => router.push(`/dashboard/devices`)}
+  className="bg-[white] hover:bg-[#f4f4f4] text-[#00695C]  px-4 py-2 rounded shadow w-full md:w-auto"
+> devices</button>
+                <button onClick={() => router.push(`/Signup`)}
+  className="bg-[white] hover:bg-[#f4f4f4] text-[#00695C]  px-4 py-2 rounded shadow w-full md:w-auto"
+> AddTeacher</button>
+            </div>
           <div className="overflow-x-auto">
             <table className="w-full table-auto border-collapse text-gray-700">
               <thead>
@@ -264,10 +283,15 @@ export default function AdminDashboard() {
                           <ShieldCheckIcon className="h-4 w-4" />
                           أدمن
                         </div>
+                      ) : u.role === 'teacher' ? (
+                        <div className="flex items-center justify-center gap-1 text-purple-600">
+                          <UserIcon className="h-4 w-4" />
+                          مدرس
+                        </div>
                       ) : (
                         <div className="flex items-center justify-center gap-1 text-blue-600">
                           <UserIcon className="h-4 w-4" />
-                          مستخدم
+                          طالب
                         </div>
                       )}
                     </td>
@@ -320,9 +344,21 @@ export default function AdminDashboard() {
         </section>
 {/* جدول الكورسات */}
   <section className="bg-[#F3F6F4] p-6 rounded-lg shadow">
-    <div className="flex justify-between items-center mb-4">
+<div className="flex flex-wrap gap-2 justify-between items-center mb-4">
       <h2 className="text-lg font-semibold">الكورسات</h2>
-      <button onClick={() => router.push(`/dashboard/AddCourse`)}className="bg-[#00C853] hover:bg-[#00B342] text-white px-4 py-2 rounded shadow">إضافة كورس</button>
+            <button onClick={() => router.push(`/dashboard/exams`)}
+  className="bg-[white] hover:bg-[#f4f4f4] text-[#00695C]  px-4 py-2 rounded shadow w-full md:w-auto"
+                > exams</button>
+            <button onClick={() => router.push(`/dashboard/videos`)}
+  className="bg-[white] hover:bg-[#f4f4f4] text-[#00695C]  px-4 py-2 rounded shadow w-full md:w-auto"
+                > videos</button>
+            <button onClick={() => router.push(`/dashboard/files`)}
+  className="bg-[white] hover:bg-[#f4f4f4] text-[#00695C]  px-4 py-2 rounded shadow w-full md:w-auto"
+                > files</button>      
+                
+                <button onClick={() => router.push(`/dashboard/AddCourse`)}
+  className="bg-[white] hover:bg-[#f4f4f4] text-[#00695C]  px-4 py-2 rounded shadow w-full md:w-auto"
+                > AddCourse</button>
     </div>
   <div className="overflow-x-auto">
     
@@ -330,6 +366,7 @@ export default function AdminDashboard() {
       <thead>
         <tr className="bg-gray-100 text-center">
           <th className="border px-4 py-2">العنوان</th>
+          <th className="border px-4 py-2">المدرس</th>
           <th className="border px-4 py-2">السعر</th>
           <th className="border px-4 py-2">الوصف</th>
           <th className="border px-4 py-2">الصورة</th>
@@ -346,6 +383,7 @@ export default function AdminDashboard() {
             className="text-center bg-white hover:bg-gray-50 transition"
           >
             <td className="border px-4 py-2">{course.title}</td>
+            <td className="border px-4 py-2">{getTeacherName(course.teacherId)}</td>
             <td className="border px-4 py-2">{course.price}</td>
             <td className="border px-4 py-2">{course.description}</td>
             <td className="border px-4 py-2">

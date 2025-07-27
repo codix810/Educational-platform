@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAdminGuard } from '../../../../../../hooks/useAdminGuard';
 import { motion } from 'framer-motion';
+import {ArrowLeft,} from 'lucide-react';
 
 
 export default function EditFilePage() {
@@ -84,8 +85,12 @@ export default function EditFilePage() {
 
   return (
     <div className="max-w-xl mx-auto mt-10 p-4 bg-white shadow rounded transition-all duration-500">
-      <h1 className="text-2xl font-bold mb-4 text-center">تعديل الملف</h1>
-
+        <button
+          onClick={() => router.back()}
+          className="flex items-center bg-[white] hover:bg-[#f4f4f4] text-[#00695C] ">
+          <ArrowLeft className="w-4 h-4" /> رجوع
+        </button>
+    <h1 className="text-2xl font-bold mb-4 text-center">تعديل الملف</h1>
       {message.text && (
         <div
           className={`mb-4 px-4 py-3 rounded transition-all duration-300 ${

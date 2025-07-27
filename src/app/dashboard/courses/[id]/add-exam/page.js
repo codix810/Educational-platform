@@ -1,18 +1,20 @@
-// ✅ مسار: src/app/dashboard/courses/[id]/add-exam/page.js
+//  مسار: src/app/dashboard/courses/[id]/add-exam/page.js
 // @ts-nocheck
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminGuard } from '../../../../../../hooks/useAdminGuard';
+import {ArrowLeft,} from 'lucide-react';
 
 export default function AddExamPage({ params }) {
 
-    useAdminGuard(); // ✅ حماية الأدمن فقط
+    useAdminGuard(); //  حماية الأدمن فقط
   
   const [questionCount, setQuestionCount] = useState(0);
   const [questions, setQuestions] = useState([]);
   const router = useRouter();
+const [examTitle, setExamTitle] = useState('');
 
   const handleGenerate = () => {
     const generated = Array.from({ length: questionCount }, (_, index) => ({
@@ -37,11 +39,13 @@ export default function AddExamPage({ params }) {
     const res = await fetch(`/api/exams`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        courseId: params.id,
-        questions,
-      }),
+ body: JSON.stringify({
+  courseId: params.id,
+  title: examTitle,
+  questions,
+}),
     });
+
 
     if (res.ok) {
       router.push(`/dashboard/exams`);
@@ -52,9 +56,13 @@ export default function AddExamPage({ params }) {
 
   return (
     <div className="max-w-5xl mx-auto mt-10 p-4">
-      <h1 className="text-xl font-bold text-center mb-4 text-[#344955]">
-        📄 إضافة امتحان للكورس
-      </h1>
+      <h1 className="text-xl font-bold text-center mb-4 text-[#344955]"> إضافة امتحان للكورس</h1>       
+        <button
+          onClick={() => router.back()}
+          className="flex items-center bg-[white] hover:bg-[#f4f4f4] text-[#00695C] ">
+          <ArrowLeft className="w-4 h-4" /> رجوع
+        </button>
+
 
       {questions.length === 0 && (
         <div className="flex flex-col items-center gap-3">
@@ -77,15 +85,25 @@ export default function AddExamPage({ params }) {
 
       {questions.length > 0 && (
         <>
+                       <input
+  type="text"
+  placeholder="عنوان الامتحان"
+  value={examTitle}
+  onChange={(e) => setExamTitle(e.target.value)}
+  className="border p-2 rounded w-full mb-4"
+/>
           <div className="space-y-8">
             {questions.map((q, i) => (
               <div
                 key={i}
                 className="border p-4 rounded shadow-md bg-white"
               >
+                
                 <h2 className="text-md font-bold mb-2 text-[#344955]">
                   سؤال {i + 1}:
                 </h2>
+ 
+
                 <input
                   type="text"
                   placeholder="نص السؤال"
