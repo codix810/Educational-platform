@@ -48,22 +48,26 @@ const Advantages = () => {
 
   const advantagesData = [
     {
-      count: graduatesCount,
+      // count: graduatesCount,
+      count: 2000,
       label: "Graduates",
       icon: <BiSolidBookOpen size={50} className="text-[#7CA982]" />,
     },
     {
-      count: coursesCount,
+      // count: coursesCount,
+      count: 200,
       label: "Courses",
       icon: <FaBook size={50} className="text-[#7CA982]" />,
     },
     {
-      count: teachersCount,
+      // count: teachersCount,
+      count: 150,
       label: "Instructors",
       icon: <FaChalkboardTeacher size={50} className="text-[#7CA982]" />,
     },
     {
-      count: studentsCount,
+      // count: studentsCount,
+      count: 5000,
       label: "Students",
       icon: <FaUsers size={50} className="text-[#7CA982]" />,
     },

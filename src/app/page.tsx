@@ -35,7 +35,7 @@ export default function Home() {
               </button>
             <div className="flex gap-4 text-center">
               <div className=" flex  items-center justify-center">
-                <VscWorkspaceTrusted size={20} className="text-white m-2" />
+                <VscWorkspaceTrusted size={20} className="text-white m-2 " />
                 <p className="text-white font-medium">Live Courses</p>
               </div>
 

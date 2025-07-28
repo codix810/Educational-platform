@@ -14,7 +14,7 @@ const Join = () => {
         
         {/* Button */}
         <div>
-          <button className="bg-white text-[#7CA982] font-bold px-6 py-3 cursor-pointer rounded-full hover:bg-gray-100 transition">
+          <button className="bg-white text-[#7CA982] font-bold px-9 py-6 cursor-pointer rounded-full hover:bg-gray-100 transition">
             <Link href='/courses' className='cursor-pointer '>
                Start Learning
             </Link>
