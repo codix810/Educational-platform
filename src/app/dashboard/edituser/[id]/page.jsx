@@ -1,19 +1,25 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useAdminGuard } from '../../../../../hooks/useAdminGuard';
 
 export default function EditUserPage() {
-  useAdminGuard(); // ✅ حماية الأدمن فقط
+  useAdminGuard();
 
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
   const router = useRouter();
   const { id } = useParams();
+  const imageInputRef = useRef(null);
 
-  // ✅ تحميل بيانات المستخدم
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) setCurrentUser(JSON.parse(storedUser));
+  }, []);
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -25,7 +31,6 @@ export default function EditUserPage() {
         console.error(err);
       }
     };
-
     if (id) fetchUser();
   }, [id]);
 
@@ -33,19 +38,53 @@ export default function EditUserPage() {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
+  const handleImageUpload = async () => {
+    const imageFile = imageInputRef.current?.files?.[0];
+    if (!imageFile) return null;
+
+    const formData = new FormData();
+    formData.append('file', imageFile);
+    formData.append('upload_preset', 'unsigned_dashboard');
+    formData.append('folder', 'teacher_images');
+
+    const res = await fetch('https://api.cloudinary.com/v1_1/dfbadbos5/image/upload', {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await res.json();
+    if (res.ok && data.secure_url) return data.secure_url;
+
+    throw new Error('فشل رفع الصورة');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await fetch(`/api/users/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData),
-    });
+    try {
+      let imageUrl = userData.image || '';
 
-    router.push('/dashboard');
+      if (userData.role === 'teacher' && imageInputRef.current?.files?.length > 0) {
+        imageUrl = await handleImageUpload();
+      }
+
+      const updatedData = {
+        ...userData,
+        image: imageUrl
+      };
+
+      await fetch(`/api/users/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData),
+      });
+
+      router.push('/dashboard');
+    } catch (err) {
+      alert(err.message || 'فشل التعديل');
+    }
   };
 
-  // ✅ شاشة تحميل بنقاط أنيميشن
   if (loading || !userData) {
     return (
       <div className="flex justify-center items-center h-screen bg-[#F9FAFB]">
@@ -72,6 +111,7 @@ export default function EditUserPage() {
       <h2 className="text-2xl font-bold mb-6 text-center text-[#374151]">
         تعديل بيانات المستخدم
       </h2>
+
       <form onSubmit={handleSubmit} className="space-y-4 text-sm">
         <div>
           <label className="block mb-1 font-medium">الاسم</label>
@@ -80,7 +120,7 @@ export default function EditUserPage() {
             name="name"
             value={userData.name || ''}
             onChange={handleChange}
-            className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+            className="w-full p-2 border rounded-md"
             required
           />
         </div>
@@ -92,7 +132,7 @@ export default function EditUserPage() {
             name="email"
             value={userData.email || ''}
             onChange={handleChange}
-            className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+            className="w-full p-2 border rounded-md"
             required
           />
         </div>
@@ -104,24 +144,66 @@ export default function EditUserPage() {
             name="phone"
             value={userData.phone || ''}
             onChange={handleChange}
-            className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+            className="w-full p-2 border rounded-md"
             required
           />
         </div>
 
-        <div>
-          <label className="block mb-1 font-medium">الدور</label>
-          <select
-            name="role"
-            value={userData.role || ''}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
-            required
-          >
-            <option value="user">مستخدم</option>
-            <option value="admin">أدمن</option>
-          </select>
-        </div>
+        {/* ✅ بيانات إضافية لو المدرس */}
+        {userData.role === 'teacher' && (
+          <>
+            <div>
+              <label className="block mb-1 font-medium">التخصص</label>
+              <input
+                type="text"
+                name="subject"
+                value={userData.subject || ''}
+                onChange={handleChange}
+                className="w-full p-2 border rounded-md"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">سنوات الخبرة</label>
+              <input
+                type="number"
+                name="experience"
+                value={userData.experience || ''}
+                onChange={handleChange}
+                className="w-full p-2 border rounded-md"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">الصورة</label>
+              <input
+                type="file"
+                accept="image/*"
+                ref={imageInputRef}
+                className="w-full p-2 border rounded-md"
+              />
+            </div>
+          </>
+        )}
+
+        {/* ✅ فقط الأدمن يقدر يغير الدور ومش لو المستخدم مدرس */}
+        {currentUser?.role === 'admin' && userData.role !== 'teacher' && (
+          <div>
+            <label className="block mb-1 font-medium">الدور</label>
+            <select
+              name="role"
+              value={userData.role || ''}
+              onChange={handleChange}
+              className="w-full p-2 border rounded-md"
+              required
+            >
+              <option value="user">مستخدم</option>
+              <option value="admin">أدمن</option>
+            </select>
+          </div>
+        )}
 
         <div>
           <label className="block mb-1 font-medium">كلمة السر</label>
@@ -130,7 +212,7 @@ export default function EditUserPage() {
             name="password"
             value={userData.password || ''}
             onChange={handleChange}
-            className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+            className="w-full p-2 border rounded-md"
             required
           />
         </div>
