@@ -10,21 +10,25 @@ const PopularCourses = () => {
   const [courses, setCourses] = useState([]);
   const [purchases, setPurchases] = useState([]);
   const [videos, setVideos] = useState({});
+  const [teachers, setTeachers] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [courseRes, purchaseRes] = await Promise.all([
+        const [courseRes, purchaseRes, teacherRes] = await Promise.all([
           fetch('/api/courses'),
           fetch('/api/purchases/all'),
+          fetch('/api/users'),
         ]);
 
         const courseData = await courseRes.json();
         const purchaseData = await purchaseRes.json();
         const fetchedCourses = courseData.courses || [];
+        const teacherData = await teacherRes.json();
 
         setCourses(fetchedCourses);
         setPurchases(purchaseData || []);
+                setTeachers((teacherData.users || []).filter(u => u.role === 'teacher'));
 
         const videoCounts = {};
         await Promise.all(
@@ -56,6 +60,10 @@ const PopularCourses = () => {
       return scoreB - scoreA;
     })
     .slice(0, 5);
+  const getTeacherName = (teacherId) => {
+    const teacher = teachers.find(t => t._id === teacherId);
+    return teacher ? teacher.name : 'مدرس غير معروف';
+  };
 
   return (
     <div className="bg-gray-50 py-12">
@@ -64,7 +72,7 @@ const PopularCourses = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {topCourses.map((course) => (
-            <Link href={`/watch/${course._id}`} key={course._id}>
+            <Link href={`/courses`} key={course._id}>
               <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:scale-105 transition cursor-pointer">
                 <div className="bg-gray-200">
                   <img
@@ -80,7 +88,9 @@ const PopularCourses = () => {
                     <span className="text-sm font-bold text-gray-800">{course.price} جنيه</span>
                   </div>
                   <h3 className="text-lg font-bold mb-1">{course.title}</h3>
-                  <p className="text-sm text-gray-600 mb-4">مدرس الكورس: {course.teacherName || 'غير معروف'}</p>
+                  <p className="text-sm text-gray-600 mb-4"> 
+                      مدرس الكورس: {getTeacherName(course.teacherId)}
+                  </p>
 
                   <div className="flex justify-between text-sm text-gray-600 mb-4">
                     <div className="flex items-center gap-1">
