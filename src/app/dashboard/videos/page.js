@@ -118,13 +118,14 @@ export default function VideosDashboardPage() {
   const avgRemMinutes = Math.round(avgMinutes % 60);
   const avgFormatted = `${avgHours} س و ${avgRemMinutes} د`;
 
-  const filteredCourses = courses.map((course) => {
-    const courseVideos = videos.filter(
-      (v) => v.courseId === course._id &&
-        (course.title.includes(searchQuery) || v.title.includes(searchQuery))
-    );
-    return { ...course, videos: courseVideos };
-  }).filter(c => c.videos.length > 0);
+const filteredCourses = courses.map((course) => {
+  const courseVideos = videos.filter(
+    (v) => v.courseId === course._id &&
+      (course.title.includes(searchQuery) || v.title.includes(searchQuery))
+  );
+  return { ...course, videos: courseVideos };
+});
+
 
   return (
     <div className="max-w-6xl mx-auto mt-10 p-4">
