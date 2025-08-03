@@ -93,21 +93,22 @@ const CardCourse = () => {
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-bold text-center mb-8">الكورسات المتاحة</h1>
 
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {categories.map((cat, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-full cursor-pointer border ${
-                selectedCategory === cat
-                  ? "bg-[#7CA982] text-white border-[#7CA982]"
-                  : "bg-white text-gray-700 border-gray-300"
-              } transition`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+<div className="flex flex-wrap justify-center gap-2 mb-12">
+  {categories.map((cat, index) => (
+    <button
+      key={index}
+      onClick={() => setSelectedCategory(cat)}
+      className={`px-4 py-1.5 text-sm rounded-full cursor-pointer border font-medium shadow-sm transition duration-200 ${
+        selectedCategory === cat
+          ? "bg-[#7CA982] text-white border-[#7CA982]"
+          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+      }`}
+    >
+      {cat}
+    </button>
+  ))}
+</div>
+
 
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
@@ -125,7 +126,7 @@ const CardCourse = () => {
             <SwiperSlide key={course._id}>
               <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:scale-105 transition">
                 <div className="bg-gray-200">
-                  <Link href={`/watch/${course._id}`}>
+                  <Link href={`/courses`}>
                     <img
                       src={course.image}
                       alt={course.title}
@@ -137,7 +138,7 @@ const CardCourse = () => {
                 </div>
 
                 <div className="p-4">
-                  <Link href={`/watch/${course._id}`}>
+                  <Link href={`/courses`}>
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm font-semibold text-[#7CA982]">{course.category}</span>
                       <span className="text-sm font-bold text-gray-800">{course.price} جنيه</span>
