@@ -6,11 +6,12 @@ import { motion } from 'framer-motion';
 
 export default function EditCoursePage() {
   const [courseData, setCourseData] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { id } = useParams();
 
-  // ✅ حماية الأدمن
   useEffect(() => {
     const userData = localStorage.getItem('user');
     if (!userData) return router.push('/not-found.js');
@@ -19,19 +20,28 @@ export default function EditCoursePage() {
     if (user.role !== 'admin') return router.push('/not-found.js');
   }, [router]);
 
-  // ✅ تحميل بيانات الكورس
   useEffect(() => {
-    const fetchCourse = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch(`/api/courses/${id}`);
-        const data = await res.json();
-        setCourseData(data);
-        setLoading(false);
+        const [courseRes, usersRes] = await Promise.all([
+          fetch(`/api/courses/${id}`),
+          fetch('/api/users')
+        ]);
+
+        const course = await courseRes.json();
+        const usersData = await usersRes.json();
+        const onlyTeachers = usersData.users.filter(u => u.role === 'teacher');
+
+        setCourseData(course);
+        setTeachers(onlyTeachers);
       } catch (err) {
-        console.error('❌ Error fetching course:', err);
+        console.error('❌ Error fetching data:', err);
+      } finally {
+        setLoading(false);
       }
     };
-    if (id) fetchCourse();
+
+    if (id) fetchData();
   }, [id]);
 
   const handleChange = (e) => {
@@ -42,28 +52,51 @@ export default function EditCoursePage() {
     e.preventDefault();
 
     try {
+      let imageUrl = courseData.image;
+      let public_id = courseData.public_id;
+
+      if (imageFile) {
+        const imageData = new FormData();
+        imageData.append('file', imageFile);
+        imageData.append('upload_preset', 'unsigned_dashboard');
+        imageData.append('folder', 'course_images');
+
+        const imgRes = await fetch("https://api.cloudinary.com/v1_1/dfbadbos5/image/upload", {
+          method: "POST",
+          body: imageData
+        });
+
+        const imgData = await imgRes.json();
+
+        if (!imgRes.ok || !imgData.secure_url) {
+          throw new Error("فشل رفع الصورة");
+        }
+
+        imageUrl = imgData.secure_url;
+        public_id = imgData.public_id;
+      }
+
       const res = await fetch(`/api/courses/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(courseData),
+        body: JSON.stringify({
+          ...courseData,
+          image: imageUrl,
+          public_id,
+        }),
       });
 
-      const text = await res.text();
-      console.log('Response status:', res.status);
-      console.log('Response body:', text);
-
+      const resultText = await res.text();
       if (res.ok) {
         router.push('/dashboard');
       } else {
-        alert('حدث خطأ أثناء التعديل: ' + text);
+        alert('❌ فشل التعديل: ' + resultText);
       }
     } catch (err) {
-      console.error('❌ Error submitting update:', err);
-      alert('حدث خطأ أثناء إرسال البيانات');
+      alert('❌ خطأ أثناء التعديل: ' + err.message);
     }
   };
 
-  // ✅ تحميل
   if (loading || !courseData) {
     return (
       <div className="flex justify-center items-center h-screen bg-[#F9FAFB]">
@@ -87,9 +120,8 @@ export default function EditCoursePage() {
       transition={{ duration: 0.5 }}
       className="max-w-xl mx-auto mt-10 p-6 bg-[#F0F4F8] rounded-2xl shadow text-gray-800"
     >
-      <h2 className="text-2xl font-bold mb-6 text-center text-[#374151]">
-        تعديل بيانات الكورس
-      </h2>
+      <h2 className="text-2xl font-bold mb-6 text-center text-[#374151]">تعديل الكورس</h2>
+
       <form onSubmit={handleSubmit} className="space-y-4 text-sm">
         <div>
           <label className="block mb-1 font-medium">اسم الكورس</label>
@@ -98,7 +130,7 @@ export default function EditCoursePage() {
             name="title"
             value={courseData.title || ''}
             onChange={handleChange}
-            className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+            className="w-full p-2 border rounded-md"
             required
           />
         </div>
@@ -110,7 +142,7 @@ export default function EditCoursePage() {
             name="price"
             value={courseData.price || ''}
             onChange={handleChange}
-            className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+            className="w-full p-2 border rounded-md"
             required
           />
         </div>
@@ -121,21 +153,42 @@ export default function EditCoursePage() {
             name="description"
             value={courseData.description || ''}
             onChange={handleChange}
-            className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+            className="w-full p-2 border rounded-md"
             required
           ></textarea>
         </div>
 
         <div>
-          <label className="block mb-1 font-medium">رابط الصورة</label>
+          <label className="block mb-1 font-medium">الصورة الحالية</label>
+          <img src={courseData.image} alt="صورة الكورس" className="w-full max-h-48 rounded-md object-cover" />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-medium">تغيير الصورة (اختياري)</label>
           <input
-            type="text"
-            name="image"
-            value={courseData.image || ''}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
-            required
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+            className="w-full p-2 border rounded-md"
           />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-medium">اختيار مدرس</label>
+          <select
+            name="teacherId"
+            value={courseData.teacherId || ''}
+            onChange={handleChange}
+            required
+            className="w-full p-2 border rounded-md"
+          >
+            <option value="">اختر مدرسًا</option>
+            {teachers.map((t) => (
+              <option key={t._id} value={t._id}>
+                {t.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <motion.button
