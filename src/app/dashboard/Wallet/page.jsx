@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAdminGuard } from '../../../../hooks/useAdminGuard';
+import Image from "next/image";
 
 export default function AllWalletRequests() {
         useAdminGuard(); //  حماية الأدمن فقط
 
   const [requests, setRequests] = useState([]);
   const [search, setSearch] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null); // لتخزين الصورة المفتوحة
 
   useEffect(() => {
     fetchRequests();
@@ -104,13 +106,19 @@ export default function AllWalletRequests() {
                   <td className="px-4 py-3">{r.userEmail || "غير متوفر"}</td>
                   <td className={`px-4 py-3 font-medium ${renderStatusColor(r.status)}`}>{r.status}</td>
                   <td className="px-4 py-3">{new Date(r.createdAt).toLocaleString()}</td>
-                  <td className="px-4 py-3">
-                    {r.url ? (
-                      <img src={r.url} alt="صورة التحويل" className="w-16 h-16 object-cover rounded" />
-                    ) : (
-                      <span className="text-gray-400">لا يوجد</span>
-                    )}
-                  </td>
+<td className="px-4 py-3">
+  {r.url ? (
+    <img
+      src={r.url}
+      alt="صورة التحويل"
+      className="w-20 h-20 object-cover rounded cursor-pointer transition-transform hover:scale-105"
+      onClick={() => setSelectedImage(r.url)}
+    />
+  ) : (
+    <span className="text-gray-400">لا يوجد</span>
+  )}
+</td>
+
                   <td className="px-4 py-3 flex flex-wrap gap-2">
                     {r.status === "pending" && (
                       <>
@@ -151,6 +159,21 @@ export default function AllWalletRequests() {
           </motion.table>
         </div>
       )}
+      {selectedImage && (
+  <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <div className="relative bg-white p-4 rounded shadow-lg max-w-[100vw] max-h-[90vh] overflow-auto">
+      <button
+        onClick={() => setSelectedImage(null)}
+        className="absolute top-2 left-2 text-red-600 text-2xl font-bold hover:text-red-800"
+        aria-label="إغلاق"
+      >
+        ✖
+      </button>
+      <img src={selectedImage} alt="الصورة المكبرة" className="max-w-full max-h-[80vh] object-contain rounded" />
+    </div>
+  </div>
+)}
+
     </div>
   );
 }
