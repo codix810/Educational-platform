@@ -105,13 +105,14 @@ export default function FilesDashboardPage() {
     );
   }
 
-  const filteredCourses = courses.map((course) => {
-    const courseFiles = files.filter(
-      (f) => f.courseId === course._id &&
+const filteredCourses = courses.map((course) => {
+  const courseFiles = files.filter(
+    (f) => f.courseId === course._id &&
       (course.title.includes(searchQuery) || f.title.includes(searchQuery))
-    );
-    return { ...course, files: courseFiles };
-  }).filter((c) => c.files.length > 0);
+  );
+  return { ...course, files: courseFiles };
+});
+
 
   return (
     <div className="max-w-6xl mx-auto mt-10 p-4">
