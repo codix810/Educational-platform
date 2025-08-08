@@ -191,6 +191,19 @@ export default function EditCoursePage() {
           </select>
         </div>
 
+        <div>
+  <label className="block mb-1 font-medium">التصنيف</label>
+  <input
+    type="text"
+    name="category"
+    value={courseData.category || ''}
+    onChange={handleChange}
+    className="w-full p-2 border rounded-md"
+    required
+  />
+</div>
+
+
         <motion.button
           type="submit"
           whileHover={{ scale: 1.03 }}
