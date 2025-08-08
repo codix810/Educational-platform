@@ -14,8 +14,9 @@ const result = await collection.insertOne({
   price: body.price,
   description: body.description,
   image: body.image,
-  public_id: body.public_id, // ⬅️ ضروري علشان الحذف بعدين
+  public_id: body.public_id,
   teacherId: body.teacherId,
+  category: body.category || 'General',
   createdAt: new Date(),
 });
 
