@@ -12,6 +12,7 @@ export default function AddCoursePage() {
     description: '',
     image: '',
     teacherId: '',
+    category: '',
   });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -181,6 +182,20 @@ const res = await fetch('/api/courses', {
             ))}
           </select>
         </div>
+
+        <div>
+  <label className="block mb-1 font-medium">التصنيف</label>
+  <input
+    type="text"
+    name="category"
+    placeholder="اكتب التصنيف هنا..."
+    value={form.category}
+    onChange={handleChange}
+    required
+    className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+  />
+</div>
+
 
         <motion.button
           type="submit"
