@@ -21,16 +21,16 @@ import {
  */
 export default function Sidebar({ currentSection, onSectionChange }) {
   const navItems = [
-    { key: 'info', label: 'معلوماتي', icon: UserIcon },
-    { key: 'wallet', label: 'محفظتي', icon: BanknotesIcon },
-    { key: 'courses', label: 'كورساتي', icon: BookOpenIcon },
-    { key: 'level', label: 'مستواي', icon: ChartBarIcon },
-    { key: 'messages', label: 'رسائلي', icon: ChatBubbleLeftRightIcon }, // زر الرسائل
+    { key: 'info', label: 'My Info', icon: UserIcon },
+    { key: 'wallet', label: 'Wallet', icon: BanknotesIcon },
+    { key: 'courses', label: 'My Courses', icon: BookOpenIcon },
+    { key: 'level', label: 'level', icon: ChartBarIcon },
+    { key: 'messages', label: 'My messages', icon: ChatBubbleLeftRightIcon }, // زر الرسائل
   ];
 
   return (
     <aside className="w-64 bg-[#8BB59B] text-white p-6 space-y-4">
-      <h2 className="text-2xl font-bold mb-6">لوحة المستخدم</h2>
+      <h2 className="text-2xl font-bold mb-6">User panel</h2>
       <nav className="space-y-2 text-lg">
         {navItems.map(({ key, label, icon: Icon }) => (
           <button

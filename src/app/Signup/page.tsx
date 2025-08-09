@@ -46,7 +46,7 @@ export default function SignupPage() {
       setTeacherImageUrl(data.secure_url);
       return data.secure_url;
     } else {
-      throw new Error('فشل رفع الصورة');
+      throw new Error('Failed to upload image');
     }
   };
 
@@ -60,7 +60,7 @@ export default function SignupPage() {
     try {
       if (role === 'teacher') {
         imageUrl = await handleImageUpload();
-        if (!imageUrl) throw new Error('برجاء رفع صورة');
+        if (!imageUrl) throw new Error('Please upload a photo');
       }
 
       const res = await fetch('/api/signup', {
@@ -101,19 +101,19 @@ export default function SignupPage() {
         }, 600);
       } else {
         setSuccess(false);
-        setMessage(data.message || 'حدث خطأ أثناء إنشاء الحساب');
+        setMessage(data.message || 'An error occurred while creating the account.');
       }
     } catch (err: any) {
       setLoading(false);
       setSuccess(false);
-      setMessage(err.message || 'فشل التسجيل');
+      setMessage(err.message || 'Registration failed');
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f0fdf4] via-[#e6f4ea] to-[#c9e6d4] px-4">
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-xl p-8 animate-fade-in border border-[#cbe3d3]">
-        <h2 className="text-3xl font-bold text-center text-[#2e7d4f] mb-6">إنشاء حساب</h2>
+        <h2 className="text-3xl font-bold text-center text-[#2e7d4f] mb-6">Create an account</h2>
 
         {message && (
           <div className={`p-4 rounded-md mb-6 text-center ${success ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} border`}>
@@ -122,35 +122,35 @@ export default function SignupPage() {
         )}
 
         {loading ? (
-          <div className="text-center py-6">جاري التسجيل...</div>
+          <div className="text-center py-6">Registering...</div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
-            <input type="text" placeholder="الاسم الكامل" value={name} onChange={(e) => setName(e.target.value)} required className="form-input" />
+            <input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} required className="form-input" />
 
             <select value={role} onChange={(e) => setRole(e.target.value)} required className="form-input">
-              <option value="">اختر نوع الحساب</option>
-              <option value="user">طالب</option>
-              <option value="teacher">مدرس</option>
+              <option value="">Choose the account type</option>
+              <option value="user">student</option>
+              <option value="teacher">Instructor</option>
             </select>
 
-            <input type="email" placeholder="البريد الإلكتروني" value={email} onChange={(e) => setEmail(e.target.value)} required className="form-input" />
+            <input type="email" placeholder="Enter your Email " value={email} onChange={(e) => setEmail(e.target.value)} required className="form-input" />
 
-            <input type="tel" placeholder="رقم الهاتف" value={phone} onChange={(e) => setPhone(e.target.value)} required className="form-input" />
+            <input type="tel" placeholder="Phone number" value={phone} onChange={(e) => setPhone(e.target.value)} required className="form-input" />
 
-            <input type="password" placeholder="كلمة المرور" value={password} onChange={(e) => setPassword(e.target.value)} required className="form-input" />
+            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required className="form-input" />
 
             {role === 'teacher' && (
               <>
-                <input type="text" placeholder="تخصصك (مثلاً: رياضيات، إنجليزي...)" value={subject} onChange={(e) => setSubject(e.target.value)} required className="form-input" />
+                <input type="text" placeholder="Your major (eg: Software, English...)" value={subject} onChange={(e) => setSubject(e.target.value)} required className="form-input" />
 
-                <input type="number" placeholder="عدد سنوات الخبرة" value={experience} onChange={(e) => setExperience(e.target.value)} required className="form-input" />
+                <input type="number" placeholder="Number of years of experience" value={experience} onChange={(e) => setExperience(e.target.value)} required className="form-input" />
 
                 <input type="file" accept="image/*" ref={imageInputRef} className="form-input" required />
               </>
             )}
 
             <button type="submit" className="w-full py-2 rounded bg-green-600 hover:bg-green-700 text-white font-semibold transition-all">
-              إنشاء الحساب
+              Create Account
             </button>
           </form>
         )}

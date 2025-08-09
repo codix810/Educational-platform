@@ -85,21 +85,21 @@ const PopularCourses = () => {
                 <div className="p-4">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-semibold text-[#7CA982]">{course.category}</span>
-                    <span className="text-sm font-bold text-gray-800">{course.price} جنيه</span>
+                    <span className="text-sm font-bold text-gray-800">{course.price} EGP</span>
                   </div>
                   <h3 className="text-lg font-bold mb-1">{course.title}</h3>
                   <p className="text-sm text-gray-600 mb-4"> 
-                      مدرس الكورس: {getTeacherName(course.teacherId)}
+                   Instructor: {getTeacherName(course.teacherId)}
                   </p>
 
                   <div className="flex justify-between text-sm text-gray-600 mb-4">
                     <div className="flex items-center gap-1">
                       <MdOutlinePlayLesson />
-                      <p>{videos[course._id] || 0} دروس</p>
+                      <p>{videos[course._id] || 0} Lessons</p>
                     </div>
                     <div className="flex items-center gap-1">
                       <PiStudentFill />
-                      <p>+{getStudentCount(course._id)} طلاب</p>
+                      <p>+{getStudentCount(course._id)} students</p>
                     </div>
                   </div>
 

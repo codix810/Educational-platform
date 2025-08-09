@@ -81,12 +81,12 @@ export default function ProfilePage() {
       if (res.ok) {
         setUser((prev) => (prev ? { ...prev, ...formData } : null));
         setEditing(false);
-        showMessage(' تم حفظ التعديلات بنجاح', 'success');
+        showMessage('Changes saved successfully', 'success');
       } else {
         showMessage(data.message, 'error');
       }
     } catch (err) {
-      showMessage(' فشل حفظ التعديلات', 'error');
+      showMessage('Failed to save changes', 'error');
     }
   };
 
@@ -142,26 +142,25 @@ export default function ProfilePage() {
             handleSave={handleSave}
             handleLogout={handleLogout}
           />
-          
         )}
+        
         {section === 'wallet' && (
           <WalletSection
             paymentOption={paymentOption}
             setPaymentOption={setPaymentOption}
           />
-          
         )}
+        
         {section === 'courses' && <CoursesSection />}
         
-        {section === 'level' && (<
-          LevelSection loginCount={
-            user?.loginCount || 0}  
+        {section === 'level' && (
+          <LevelSection
+            loginCount={user?.loginCount || 0}
             lastLogin={user?.lastLogin || null}
-            />
-          )} 
+          />
+        )}
 
         {section === 'messages' && <Messages />}
-
       </main>
     </div>
   );

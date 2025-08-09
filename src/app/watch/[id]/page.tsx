@@ -50,7 +50,7 @@ export default function WatchCoursePage() {
         setExams(examsData.exams || []);
         setLoading(false);
       } catch (err) {
-        console.error("فشل تحميل بيانات الكورس:", err);
+        console.error("❌ Data loading failed:", err);
         setLoading(false);
       }
     };
@@ -81,21 +81,21 @@ export default function WatchCoursePage() {
 
       {/* الملفات */}
       <div>
-        <h2 className="text-xl font-bold text-gray-700 mb-4">ملفات الكورس</h2>
+        <h2 className="text-xl font-bold text-gray-700 mb-4">Course files</h2>
         {files.length > 0 ? (
           <table className="w-full text-left border rounded overflow-hidden shadow">
             <thead className="bg-gray-100">
               <tr>
-                <th className="py-2 px-4">الاسم</th>
-                <th className="py-2 px-4">الحجم</th>
-                <th className="py-2 px-4">تحميل</th>
+                <th className="py-2 px-4">Name</th>
+                <th className="py-2 px-4">Size</th>
+                <th className="py-2 px-4">download</th>
               </tr>
             </thead>
             <tbody>
               {files.map((file, i) => (
                 <tr key={i} className="border-t">
                   <td className="py-2 px-4">{file.title || file.originalName}</td>
-                  <td className="py-2 px-4">{file.sizeMB} ميجا</td>
+                  <td className="py-2 px-4">{file.sizeMB}MD</td>
                   <td className="py-2 px-4">
                     <a
                       href={file.url}
@@ -103,7 +103,7 @@ export default function WatchCoursePage() {
                       target="_blank"
                       className="text-blue-600 hover:underline"
                     >
-                      تحميل
+                      download
                     </a>
                   </td>
                 </tr>
@@ -111,7 +111,7 @@ export default function WatchCoursePage() {
             </tbody>
           </table>
         ) : (
-          <p className="text-gray-500">لا توجد ملفات متاحة.</p>
+          <p className="text-gray-500">No files available.</p>
         )}
       </div>
 
@@ -121,14 +121,14 @@ export default function WatchCoursePage() {
             onClick={() => router.push(`/watch/${id}/videos`)}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow"
           >
-            مشاهدة الفيديوهات
+           Watch videos
           </button>
           {exams.length > 0 && (
             <button
               onClick={() => router.push(`/watch/${id}/exams`)}
               className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded shadow"
             >
-              دخول الامتحان
+              Entering the exam
             </button>
           )}
         </div>

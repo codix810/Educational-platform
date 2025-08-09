@@ -50,14 +50,14 @@ export default function LoginPage() {
       }, 250);
     } else {
       setSuccess(false);
-      setMessage(data.message || 'حدث خطأ أثناء تسجيل الدخول');
+      setMessage(data.message || 'An error occurred while logging in');
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-[#D8E2EA] px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg animate-fade-in">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">تسجيل الدخول</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
 
         {message && (
           <div
@@ -83,7 +83,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <input
               type="email"
-              placeholder="البريد الإلكتروني"
+              placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -91,7 +91,7 @@ export default function LoginPage() {
             />
             <input
               type="password"
-              placeholder="كلمة المرور"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -101,7 +101,7 @@ export default function LoginPage() {
               type="submit"
               className="w-full py-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all"
             >
-              دخول
+              Sign In
             </button>
           </form>
         )}

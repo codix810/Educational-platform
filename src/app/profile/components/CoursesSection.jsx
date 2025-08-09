@@ -63,13 +63,13 @@ export default function CoursesPage() {
 
     if (result.exists) {
       setTimeout(() => {
-        showMessage('لقد قمت بشراء هذا الكورس من قبل.', 'error');
+        showMessage('You have already purchased this course.', 'error');
       }, 200);
       return;
     }
 
     if (user.balance < selectedCourse.price) {
-      showMessage('رصيدك غير كافي لشراء هذا الكورس.', 'error');
+      showMessage('Your balance is not enough to purchase this course.', 'error');
       return;
     }
 
@@ -90,16 +90,15 @@ export default function CoursesPage() {
       setSuccessAnimation(true);
       setTimeout(() => setSuccessAnimation(false), 4000);
     } else {
-      showMessage(' حدث خطأ أثناء الشراء.', 'error');
+      showMessage('An error occurred while purchasing.', 'error');
     }
   };
 
-const filteredCourses = courses
-  .filter(course => purchasedCourseIds.includes(course._id))
-  .filter(course => course.title.toLowerCase().includes(search.toLowerCase()));
+  const filteredCourses = courses
+    .filter(course => purchasedCourseIds.includes(course._id))
+    .filter(course => course.title.toLowerCase().includes(search.toLowerCase()));
 
-
-if (loading) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <motion.div
@@ -117,19 +116,19 @@ if (loading) {
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold text-center mb-4 text-gray-800">الكورسات المتاحة</h1>
+      <h1 className="text-3xl font-bold text-center mb-4 text-gray-800">Available Courses</h1>
 
       {user && (
         <div className="text-center text-gray-700 mb-6">
-          <span className="font-medium text-lg">رصيدك الحالي: </span>
-          <span className="text-green-600 font-bold">{user.balance} جنيه</span>
+          <span className="font-medium text-lg">Your Current Balance: </span>
+          <span className="text-green-600 font-bold">{user.balance} EGP</span>
         </div>
       )}
 
       <div className="mb-8 flex justify-center">
         <input
           type="text"
-          placeholder="ابحث عن كورس..."
+          placeholder="Search for a course..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full max-w-md px-4 py-2 border rounded-lg shadow focus:outline-none focus:ring focus:border-green-400"
@@ -163,13 +162,13 @@ if (loading) {
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
           >
-            <h2 className="text-2xl font-bold text-green-700 mb-2"> مبروك!</h2>
-            <p className="text-gray-700 mb-4">تم شراء الكورس بنجاح، استمتع بمشاهدته </p>
+            <h2 className="text-2xl font-bold text-green-700 mb-2">Congratulations!</h2>
+            <p className="text-gray-700 mb-4">The course has been purchased successfully, enjoy watching it.</p>
             <button
               onClick={() => setSuccessAnimation(false)}
               className="mt-4 px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded shadow"
             >
-              مشاهدة الكورسات
+              View Courses
             </button>
           </motion.div>
         </motion.div>
@@ -186,7 +185,7 @@ if (loading) {
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
           >
-            <h2 className="text-xl font-bold text-gray-800 mb-4">هل أنت متأكد من بدء الكورس؟</h2>
+            <h2 className="text-xl font-bold text-gray-800 mb-4">Are you sure you want to start the course?</h2>
             <button
               onClick={() => {
                 setStartModalOpen(false);
@@ -194,13 +193,13 @@ if (loading) {
               }}
               className="mt-4 px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded shadow"
             >
-              نعم، ابدأ الكورس
+              Yes, Start the Course
             </button>
             <button
               onClick={() => setStartModalOpen(false)}
               className="mt-4 ml-4 px-6 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded shadow"
             >
-              إلغاء
+              Cancel
             </button>
           </motion.div>
         </motion.div>
@@ -222,7 +221,7 @@ if (loading) {
             />
             <h3 className="text-xl font-semibold text-gray-800 mb-2">{course.title}</h3>
             <p className="text-sm text-gray-600 mb-2">{course.description}</p>
-            <p className="text-md font-bold text-green-700 mb-4">{course.price} جنيه</p>
+            <p className="text-md font-bold text-green-700 mb-4">{course.price} EGP</p>
             {purchasedCourseIds.includes(course._id) ? (
               <button
                 onClick={() => {
@@ -231,7 +230,7 @@ if (loading) {
                 }}
                 className="w-full flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded transition"
               >
-                <PlayCircle size={20} /> ابدأ الكورس
+                <PlayCircle size={20} /> Start Course
               </button>
             ) : (
               <button
@@ -241,7 +240,7 @@ if (loading) {
                 }}
                 className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded transition"
               >
-                شراء الكورس
+                Buy Course
               </button>
             )}
           </motion.div>

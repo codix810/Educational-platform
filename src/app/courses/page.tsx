@@ -100,7 +100,7 @@ export default function CoursesPage() {
 
   const getTeacherName = (teacherId?: string) => {
     const teacher = teachers.find((t) => t._id === teacherId);
-    return teacher ? teacher.name : 'مدرس غير معروف';
+    return teacher ? teacher.name : 'Unknown teacher';
   };
 
   const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
@@ -122,13 +122,13 @@ export default function CoursesPage() {
 
     if (result.exists) {
       setTimeout(() => {
-        showMessage('لقد قمت بشراء هذا الكورس من قبل.', 'error');
+        showMessage('I have purchased this course before.', 'error');
       }, 200);
       return;
     }
 
     if (user.balance < selectedCourse.price) {
-      showMessage('رصيدك غير كافي لشراء هذا الكورس.', 'error');
+      showMessage('Your balance is not enough to purchase this course.', 'error');
       return;
     }
 
@@ -148,7 +148,7 @@ export default function CoursesPage() {
       setSuccessAnimation(true);
       setTimeout(() => setSuccessAnimation(false), 4000);
     } else {
-      showMessage('❌ حدث خطأ أثناء الشراء.', 'error');
+      showMessage('❌ An error occurred during the purchase.', 'error');
     }
   };
 
@@ -170,19 +170,19 @@ export default function CoursesPage() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto bg-gray-50 rounded-xl">
-      <h1 className="text-3xl font-bold text-center mb-4 text-gray-800">الكورسات المتاحة</h1>
+      <h1 className="text-3xl font-bold text-center mb-4 text-gray-800">Available courses</h1>
 
       {user && (
         <div className="text-center text-gray-700 mb-6">
-          <span className="font-medium text-lg">رصيدك الحالي: </span>
-          <span className="text-green-600 font-bold">{user.balance} جنيه</span>
+          <span className="font-medium text-lg">Your current balance:</span>
+          <span className="text-green-600 font-bold">{user.balance} EGP</span>
         </div>
       )}
 
       <div className="mb-8 flex justify-center">
         <input
           type="text"
-          placeholder="ابحث عن كورس..."
+          placeholder="Search a course..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-emerald-400"
@@ -208,10 +208,10 @@ export default function CoursesPage() {
       {successAnimation && (
         <motion.div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <motion.div className="bg-white p-6 rounded-xl shadow-xl text-center max-w-md mx-auto" initial={{ scale: 0.8 }} animate={{ scale: 1 }}>
-            <h2 className="text-2xl font-bold text-green-700 mb-2">مبروك!</h2>
-            <p className="text-gray-700 mb-4">تم شراء الكورس بنجاح، استمتع بمشاهدته</p>
+            <h2 className="text-2xl font-bold text-green-700 mb-2">Congrats!</h2>
+            <p className="text-gray-700 mb-4">The course has been successfully purchased, enjoy watching it.</p>
             <button onClick={() => setSuccessAnimation(false)} className="mt-4 px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded shadow">
-              مشاهدة الكورسات
+              Watch the courses
             </button>
           </motion.div>
         </motion.div>
@@ -220,12 +220,12 @@ export default function CoursesPage() {
       {modalOpen && selectedCourse && user && (
         <motion.div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <motion.div className="bg-white p-6 rounded-xl shadow-lg w-[90%] max-w-sm text-center" initial={{ scale: 0.8 }} animate={{ scale: 1 }}>
-            <h2 className="text-lg font-bold mb-4 text-gray-800">هل أنت متأكد من شراء الكورس؟</h2>
-            <p className="mb-2 text-gray-600">رصيدك الحالي: {user.balance} جنيه</p>
-            <p className="text-gray-800 font-medium mb-4">سعر الكورس: {selectedCourse.price} جنيه</p>
+            <h2 className="text-lg font-bold mb-4 text-gray-800">Are you sure you want to purchase the course?</h2>
+            <p className="mb-2 text-gray-600">Your current balance: {user.balance} EGP</p>
+            <p className="text-gray-800 font-medium mb-4">Course price: {selectedCourse.price} EGP</p>
             <div className="flex justify-center gap-4 mt-4">
               <button onClick={() => setModalOpen(false)} className="px-4 py-2 rounded bg-gray-300 text-gray-800 hover:bg-gray-400 transition">
-                إلغاء
+              cancel
               </button>
               <button
                 onClick={handleBuy}
@@ -236,7 +236,7 @@ export default function CoursesPage() {
                 }`}
                 disabled={user.balance < selectedCourse.price}
               >
-                تأكيد الشراء
+               Confirm purchase
               </button>
             </div>
           </motion.div>
@@ -260,16 +260,16 @@ export default function CoursesPage() {
             <h3 className="text-xl font-semibold text-gray-800 mb-2">{course.title}</h3>
             <p className="text-sm text-gray-600 mb-2">{course.description}</p>
             <p className="text-xs text-gray-500 mb-2">
-              مدرس الكورس: <span className="text-gray-700 font-semibold">{getTeacherName(course.teacherId)}</span>
+               Instructor: <span className="text-gray-700 font-semibold">{getTeacherName(course.teacherId)}</span>
             </p>
             <div className="flex justify-between items-center text-sm text-gray-600 mb-2">
-              <span className="flex items-center gap-1"><MdOutlinePlayLesson className="text-emerald-500" /> {videoCounts[course._id] || 0} دروس</span>
-              <span className="flex items-center gap-1"><FaRegFileAlt className="text-emerald-500" /> {examCounts[course._id] || 0} امتحانات</span>
+              <span className="flex items-center gap-1"><MdOutlinePlayLesson className="text-emerald-500" /> {videoCounts[course._id] || 0} Lessons</span>
+              <span className="flex items-center gap-1"><FaRegFileAlt className="text-emerald-500" /> {examCounts[course._id] || 0} Exams:</span>
             </div>
             <p className="flex items-center text-sm text-gray-600 mb-2">
-              <PiStudentFill className="mr-1 text-emerald-500" /> +{purchaseCounts[course._id] || 0} طالب
+              <PiStudentFill className="mr-1 text-emerald-500" /> +{purchaseCounts[course._id] || 0} students
             </p>
-            <p className="text-md font-bold text-emerald-700 mb-4">{course.price} جنيه</p>
+            <p className="text-md font-bold text-emerald-700 mb-4">{course.price} EGP</p>
             <button
               onClick={() => {
                 setSelectedCourse(course);
@@ -277,7 +277,7 @@ export default function CoursesPage() {
               }}
               className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded transition"
             >
-              شراء الكورس
+             Buy the course
             </button>
           </motion.div>
         ))}

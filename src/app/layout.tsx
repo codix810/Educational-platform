@@ -102,21 +102,21 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                         href="/Login"
                         className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
                       >
-                        تسجيل الدخول
+                        Login
                       </Link>
                       <Link
                         href="/Signup"
                         className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition"
                       >
-                        إنشاء حساب
+                        Sign Up
                       </Link>
                     </div>
                   )}
 
                   {user && (
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3  ">
                       <div className="sm:hidden">
-                        <Disclosure.Button className="inline-flex items-center p-2 rounded-md text-white">
+                        <Disclosure.Button className="inline-flex items-center p-2 rounded-md text-white ">
                           {open ? (
                             <XMarkIcon className="h-6 w-6" />
                           ) : (
@@ -125,7 +125,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                         </Disclosure.Button>
                       </div>
 
-                      <Menu as="div" className="relative">
+                      <Menu as="div" className="relative ">
                         <Menu.Button className="flex items-center bg-white rounded-full p-2 shadow-md">
                           <UserIcon className="h-6 w-6 text-gray-700" />
                         </Menu.Button>
@@ -144,15 +144,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                                 href="/profile"
                                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                               >
-                                الملف الشخصي
+                               Profile
                               </Link>
                             </Menu.Item>
                             <Menu.Item>
                               <button
                                 onClick={handleLogout}
-                                className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                                className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 cursor-pointer"
                               >
-                                تسجيل الخروج
+                              Sign out
                               </button>
                             </Menu.Item>
                           </Menu.Items>

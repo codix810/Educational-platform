@@ -13,13 +13,13 @@ export default function LevelSection({ loginCount = 0, lastLogin }) {
       animate={{ opacity: 1 }}
       className="bg-white p-6 rounded shadow space-y-6"
     >
-      <h3 className="text-xl font-bold mb-4">مستواي</h3>
+      <h3 className="text-xl font-bold mb-4">Levels</h3>
       <div className="text-sm text-gray-700 space-y-2">
-        <p><strong>عدد مرات الدخول:</strong> {loginCount}</p>
-        <p><strong>آخر دخول:</strong> {lastLogin ? new Date(lastLogin).toLocaleString() : 'غير متوفر'}</p>
+        <p><strong>Number of entries:</strong> {loginCount}</p>
+        <p><strong>Last entry:</strong> {lastLogin ? new Date(lastLogin).toLocaleString() : 'unavailable'}</p>
       </div>
       <div className="mt-2">
-        <p className="font-semibold mb-1">نسبة الدخول</p>
+        <p className="font-semibold mb-1">Entry rate</p>
         <div className="w-full h-4 bg-gray-200 rounded">
           <motion.div
             className="h-full bg-green-500 rounded"

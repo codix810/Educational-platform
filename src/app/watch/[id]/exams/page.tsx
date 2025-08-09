@@ -77,7 +77,7 @@ export default function ExamPage() {
 
     const unanswered = selectedExam.questions.some((_, i) => !answers[i]);
     if (unanswered) {
-      setErrorMsg("❗ من فضلك، أجب على جميع الأسئلة قبل إرسال الامتحان.");
+      setErrorMsg("❗Please answer all questions before submitting the exam.");
       return;
     }
 
@@ -113,12 +113,12 @@ export default function ExamPage() {
       {selectedExam && (
         <div className="bg-white p-6 rounded-xl shadow-lg border border-indigo-100">
           <h2 className="text-xl font-semibold text-indigo-700 mb-4">
-            الأسئلة الخاصة بامتحان: {selectedExam.title}
+           Exam questions: {selectedExam.title}
           </h2>
 
           {hasSubmitted && (
             <p className="text-green-600 font-bold mb-4">
-              لقد قمت بحل هذا الامتحان مسبقًا. درجتك: {score}
+             You have already taken this exam. Your score: {score}
             </p>
           )}
 
@@ -151,7 +151,7 @@ export default function ExamPage() {
               onClick={handleSubmit}
               className="mt-6 bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded"
             >
-              إرسال الامتحان
+              Submit the exam
             </button>
           )}
         </div>
@@ -164,7 +164,7 @@ export default function ExamPage() {
             onClick={() => checkIfSubmitted(exam)}
             className="bg-indigo-500 hover:bg-indigo-600 text-white py-3 px-6 rounded-lg text-right"
           >
-            امتحان {exam.title || `#${index + 1}`}
+            exam {exam.title || `#${index + 1}`}
           </button>
         ))}
       </div>

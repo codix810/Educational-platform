@@ -10,14 +10,14 @@ export default function Messages() {
   useEffect(() => {
     const userStr = localStorage.getItem('user');
     if (!userStr) {
-      setError('يجب تسجيل الدخول لعرض الرسائل');
+      setError('You must be logged in to view messages');
       setLoading(false);
       return;
     }
 
     const user = JSON.parse(userStr);
     if (!user._id) {
-      setError('بيانات المستخدم غير مكتملة');
+      setError('User data is incomplete');
       setLoading(false);
       return;
     }
@@ -30,24 +30,26 @@ export default function Messages() {
         setLoading(false);
       })
       .catch(() => {
-        setError('فشل جلب الرسائل');
+        setError('Failed to fetch messages');
         setLoading(false);
       });
   }, []);
 
-  if (loading) return <p>جاري تحميل الرسائل...</p>;
+  if (loading) return <p>Loading messages...</p>;
   if (error) return <p className="text-red-600">{error}</p>;
-  if (messages.length === 0) return <p>لا توجد رسائل حتى الآن.</p>;
+  if (messages.length === 0) return <p>No messages yet.</p>;
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold mb-4">رسائلي</h2>
+      <h2 className="text-xl font-bold mb-4">My Messages</h2>
       {messages.map((msg) => (
         <div key={msg._id} className="p-4 border rounded shadow bg-white">
-          <p><strong>المرسل:</strong> {msg.name || 'غير معروف'}</p>
-          <p><strong>البريد الإلكتروني:</strong> {msg.email || 'غير متوفر'}</p>
-          <p><strong>الرسالة:</strong> {msg.message}</p>
-          <p className="text-xs text-gray-500 mt-2">أُرسلت في: {new Date(msg.createdAt).toLocaleString()}</p>
+          <p><strong>Sender:</strong> {msg.name || 'Unknown'}</p>
+          <p><strong>Email:</strong> {msg.email || 'Not available'}</p>
+          <p><strong>Message:</strong> {msg.message}</p>
+          <p className="text-xs text-gray-500 mt-2">
+            Sent at: {new Date(msg.createdAt).toLocaleString()}
+          </p>
         </div>
       ))}
     </div>

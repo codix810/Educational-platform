@@ -17,7 +17,7 @@ export default function WalletSection({ paymentOption, setPaymentOption }) {
 
   return (
     <div className="space-y-6 bg-white p-6 rounded shadow-md">
-      <h2 className="text-2xl font-bold mb-4">اختر وسيلة الدفع</h2>
+      <h2 className="text-2xl font-bold mb-4">Choose the payment method</h2>
 
       {/* الأزرار */}
       <div className="flex gap-3 flex-wrap">
@@ -27,7 +27,7 @@ export default function WalletSection({ paymentOption, setPaymentOption }) {
             paymentOption === "vodafone" ? "bg-red-600 text-white" : "bg-gray-200"
           }`}
         >
-          فودافون كاش
+         Vodafone Cash
         </button>
 
         <button
@@ -54,7 +54,7 @@ export default function WalletSection({ paymentOption, setPaymentOption }) {
             paymentOption === "fawry" ? "bg-yellow-600 text-white" : "bg-gray-200"
           }`}
         >
-          فوري
+          Fawry
         </button>
       </div>
 
