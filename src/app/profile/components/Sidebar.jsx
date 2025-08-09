@@ -6,10 +6,11 @@ import {
   BanknotesIcon,
   BookOpenIcon,
   ChartBarIcon,
+  ChatBubbleLeftRightIcon,
 } from '@heroicons/react/24/outline';
 
 /**
- * @typedef {'info' | 'wallet' | 'courses' | 'level'} SectionType
+ * @typedef {'info' | 'wallet' | 'courses' | 'level' | 'messages'} SectionType
  */
 
 /**
@@ -24,6 +25,7 @@ export default function Sidebar({ currentSection, onSectionChange }) {
     { key: 'wallet', label: 'محفظتي', icon: BanknotesIcon },
     { key: 'courses', label: 'كورساتي', icon: BookOpenIcon },
     { key: 'level', label: 'مستواي', icon: ChartBarIcon },
+    { key: 'messages', label: 'رسائلي', icon: ChatBubbleLeftRightIcon }, // زر الرسائل
   ];
 
   return (

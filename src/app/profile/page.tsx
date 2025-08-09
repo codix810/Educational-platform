@@ -10,6 +10,7 @@ import InfoSection from './components/InfoSection';
 import WalletSection from './components/WalletSection';
 import CoursesSection from './components/CoursesSection';
 import LevelSection from './components/LevelSection';
+import Messages from './components/Messages';
 
 type UserType = {
   _id: string;
@@ -24,7 +25,7 @@ export default function ProfilePage() {
   const [user, setUser] = useState<UserType | null>(null);
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', image: '' });
-  const [section, setSection] = useState<'info' | 'wallet' | 'courses' | 'level'>('info');
+  const [section, setSection] = useState<'info' | 'wallet' | 'courses' | 'level' | 'messages'>('info');
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
@@ -143,7 +144,6 @@ export default function ProfilePage() {
           />
           
         )}
-
         {section === 'wallet' && (
           <WalletSection
             paymentOption={paymentOption}
@@ -151,14 +151,16 @@ export default function ProfilePage() {
           />
           
         )}
-
         {section === 'courses' && <CoursesSection />}
-        {section === 'level' && (
-  <LevelSection
-    loginCount={user?.loginCount || 0}
-    lastLogin={user?.lastLogin || null}
-  />
-)}
+        
+        {section === 'level' && (<
+          LevelSection loginCount={
+            user?.loginCount || 0}  
+            lastLogin={user?.lastLogin || null}
+            />
+          )} 
+
+        {section === 'messages' && <Messages />}
 
       </main>
     </div>
