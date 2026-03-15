@@ -30,3 +30,14 @@ font-size: 18px;
   @apply bg-[#B2CDB9] hover:bg-[#EDF8ED]  ;
 }
 
+@keyframes gradientMove {
+  0%{
+    background-position:0% 50%;
+  }
+  50%{
+    background-position:100% 50%;
+  }
+  100%{
+    background-position:0% 50%;
+  }
+}

@@ -14,7 +14,12 @@ import {
 } from '@heroicons/react/24/outline';
 import {ArrowLeft,} from 'lucide-react';
 
+import { useAdminGuard } from '../../../../hooks/useAdminGuard';
+
 export default function VideosDashboardPage() {
+    useAdminGuard(); // ✅ حماية الأدمن فقط
+
+
   const [videos, setVideos] = useState([]);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);

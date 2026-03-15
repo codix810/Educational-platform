@@ -11,7 +11,11 @@ import {
   PlusCircle,
 } from 'lucide-react';
 
+import { useAdminGuard } from '../../../../hooks/useAdminGuard';
+
 export default function EditExamPage() {
+      useAdminGuard(); // ✅ حماية الأدمن فقط
+
   const { id } = useParams();
   const router = useRouter();
   const [exam, setExam] = useState(null);

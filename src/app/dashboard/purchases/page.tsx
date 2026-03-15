@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TrashIcon } from '@heroicons/react/24/outline';
 
+import { useAdminGuard } from '../../../../hooks/useAdminGuard';
+
 type Purchase = {
   _id: string;
   userId: string;
@@ -18,7 +20,11 @@ type Message = {
   text: string;
 };
 
+
+
 export default function PurchasesPage() {
+      useAdminGuard(); // ✅ حماية الأدمن فقط
+
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [search, setSearch] = useState('');
   const [message, setMessage] = useState<Message | null>(null);

@@ -5,7 +5,11 @@ import { useRouter, useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {ArrowLeft,} from 'lucide-react';
 
+import { useAdminGuard } from '../../../../hooks/useAdminGuard';
+
 export default function EditVideoPage() {
+      useAdminGuard(); // ✅ حماية الأدمن فقط
+
   const router = useRouter();
   const { id: videoId } = useParams();
 

@@ -1,3 +1,4 @@
+//app/dashboard/page.tsx
 // @ts-ignore
 'use client';
 

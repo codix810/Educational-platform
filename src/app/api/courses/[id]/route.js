@@ -1,3 +1,5 @@
+//app/api/courses/[id]/route.js
+
 import { NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
 import clientPromise from '../../../../../lib/mongodb';

@@ -14,7 +14,12 @@ import {
   BookOpenIcon,
 } from '@heroicons/react/24/outline';
 import {ArrowLeft,} from 'lucide-react';
+
+import { useAdminGuard } from '../../../../hooks/useAdminGuard';
+
 export default function ExamsPage() {
+      useAdminGuard(); // ✅ حماية الأدمن فقط
+
   const [courses, setCourses] = useState([]);
   const [exams, setExams] = useState([]);
   const [loading, setLoading] = useState(true);

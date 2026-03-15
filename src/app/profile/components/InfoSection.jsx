@@ -6,6 +6,8 @@ import { motion } from 'framer-motion';
 import { PencilIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
 
+
+
 export default function InfoSection({
   user,
   formData,
@@ -17,6 +19,7 @@ export default function InfoSection({
   handleImageChange,
   handleLogout,
 }) {
+
   const router = useRouter();
 
   return (
@@ -28,21 +31,21 @@ export default function InfoSection({
     >
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-2xl font-bold text-gray-800">My Information</h3>
+        <h3 className="text-2xl font-bold text-gray-800">معلوماتي</h3>
         <div className="flex gap-3">
           <button
             onClick={() => setEditing(!editing)}
             className="flex items-center gap-1 px-4 py-1.5 bg-yellow-400 text-white rounded-xl hover:bg-yellow-500 transition"
           >
             <PencilIcon className="h-5 w-5" />
-            {editing ? 'Cancel' : 'Edit'}
+            {editing ? 'إلغاء' : 'تعديل'}
           </button>
           <button
             onClick={handleLogout}
             className="flex items-center gap-1 px-4 py-1.5 bg-red-500 text-white rounded-xl hover:bg-red-600 transition"
           >
             <ArrowRightOnRectangleIcon className="h-5 w-5" />
-            Logout
+            خروج
           </button>
         </div>
       </div>
@@ -62,7 +65,7 @@ export default function InfoSection({
             disabled={!editing}
             value={formData.name}
             onChange={handleInputChange}
-            placeholder="Name"
+            placeholder="الاسم"
             className="w-full p-2.5 border rounded-lg bg-gray-50 disabled:bg-gray-100"
           />
           <input
@@ -71,7 +74,7 @@ export default function InfoSection({
             disabled={!editing}
             value={formData.email}
             onChange={handleInputChange}
-            placeholder="Email"
+            placeholder="البريد الإلكتروني"
             className="w-full p-2.5 border rounded-lg bg-gray-50 disabled:bg-gray-100"
           />
           <input
@@ -80,7 +83,7 @@ export default function InfoSection({
             disabled={!editing}
             value={formData.phone}
             onChange={handleInputChange}
-            placeholder="Phone Number"
+            placeholder="رقم الهاتف"
             className="w-full p-2.5 border rounded-lg bg-gray-50 disabled:bg-gray-100"
           />
           {editing && (
@@ -91,7 +94,7 @@ export default function InfoSection({
                 whileTap={{ scale: 0.95 }}
                 className="mt-2 bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition"
               >
-                Save Changes
+                حفظ التغييرات
               </motion.button>
             </>
           )}
@@ -102,24 +105,24 @@ export default function InfoSection({
       <div className="pt-4 border-t space-y-3 text-sm text-gray-700">
         <div className="grid sm:grid-cols-3 gap-4 text-center">
           <div className="bg-gray-50 rounded-lg p-4 shadow-inner">
-            <p className="text-gray-500">Account Created</p>
+            <p className="text-gray-500">تاريخ إنشاء الحساب</p>
             <p className="font-bold text-gray-800">{new Date(user.createdAt).toLocaleDateString()}</p>
           </div>
           <div className="bg-gray-50 rounded-lg p-4 shadow-inner">
-            <p className="text-gray-500">Login Count</p>
+            <p className="text-gray-500">عدد مرات الدخول</p>
             <p className="font-bold text-blue-600">{user.loginCount || 0}</p>
           </div>
           <div className="bg-gray-50 rounded-lg p-4 shadow-inner">
-            <p className="text-gray-500">Last Login</p>
+            <p className="text-gray-500">آخر دخول</p>
             <p className="font-bold text-green-600">
-              {user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Not Available'}
+              {user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'غير متوفر'}
             </p>
           </div>
         </div>
 
-        {/* Estimated Login Rate */}
+        {/* نسبة الدخول */}
         <div className="mt-4">
-          <p className="font-semibold text-gray-600 mb-1">Estimated Login Rate</p>
+          <p className="font-semibold text-gray-600 mb-1">نسبة الدخول التقديرية</p>
           <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden">
             <motion.div
               className="h-full bg-green-500"
@@ -129,6 +132,8 @@ export default function InfoSection({
             />
           </div>
         </div>
+<a href="teacherprofile">555</a>
+
       </div>
     </motion.div>
   );

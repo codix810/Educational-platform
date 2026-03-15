@@ -22,6 +22,7 @@ type UserType = {
 };
 
 export default function ProfilePage() {
+
   const [user, setUser] = useState<UserType | null>(null);
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', image: '' });
@@ -30,32 +31,47 @@ export default function ProfilePage() {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [paymentOption, setPaymentOption] = useState<string | null>(null);
+
   const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
       const savedUser = localStorage.getItem('user');
-      if (!savedUser) return router.push('/Login');
+
+      if (!savedUser) {
+        router.push('/Login');
+        return;
+      }
+
       const parsedUser: UserType = JSON.parse(savedUser);
-      if (!parsedUser._id) return router.push('/Login');
+
+      if (!parsedUser._id) {
+        router.push('/Login');
+        return;
+      }
 
       const res = await fetch(`/api/users/${parsedUser._id}`);
       const data = await res.json();
+
       setUser(data);
+
       setFormData({
         name: data.name,
         email: data.email,
         phone: data.phone,
         image: data.image || '',
       });
+
       setLoading(false);
     };
+
     fetchUserData();
   }, [router]);
 
   const showMessage = (msg: string, type: string) => {
     setMessage(msg);
     setMessageType(type);
+
     setTimeout(() => {
       setMessage('');
       setMessageType('');
@@ -67,7 +83,12 @@ export default function ProfilePage() {
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) setFormData({ ...formData, image: URL.createObjectURL(file) });
+    if (file) {
+      setFormData({
+        ...formData,
+        image: URL.createObjectURL(file)
+      });
+    }
   };
 
   const handleSave = async () => {
@@ -77,16 +98,19 @@ export default function ProfilePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
+
       const data = await res.json();
+
       if (res.ok) {
-        setUser((prev) => (prev ? { ...prev, ...formData } : null));
+        setUser(prev => prev ? { ...prev, ...formData } : null);
         setEditing(false);
-        showMessage('Changes saved successfully', 'success');
+        showMessage('تم حفظ التعديلات بنجاح', 'success');
       } else {
         showMessage(data.message, 'error');
       }
-    } catch (err) {
-      showMessage('Failed to save changes', 'error');
+
+    } catch {
+      showMessage('فشل حفظ التعديلات', 'error');
     }
   };
 
@@ -98,6 +122,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-100">
+
         <motion.div
           className="flex gap-2"
           animate={{ opacity: [0.3, 1, 0.3] }}
@@ -107,30 +132,42 @@ export default function ProfilePage() {
           <div className="w-3 h-3 bg-gray-600 rounded-full"></div>
           <div className="w-3 h-3 bg-gray-600 rounded-full"></div>
         </motion.div>
+
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-[#EEF1EF]">
-      <Sidebar currentSection={section} onSectionChange={setSection} />
 
-      <main className="flex-1 p-6 md:p-10 transition-all">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-[#EEF1EF]">
+
+      {/* Sidebar */}
+      <Sidebar
+        currentSection={section}
+        onSectionChange={setSection}
+      />
+
+      {/* Content */}
+      <main className="flex-1 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-6 transition-all">
+
         {message && (
+
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`mb-4 p-3 rounded text-center transition-all shadow-lg text-sm font-medium ${
-              messageType === 'success'
+            className={`mb-6 p-3 rounded text-center shadow text-sm font-medium
+            ${messageType === 'success'
                 ? 'bg-green-100 text-green-800'
                 : 'bg-red-100 text-red-800'
-            }`}
+              }`}
           >
             {message}
           </motion.div>
+
         )}
 
         {section === 'info' && (
+
           <InfoSection
             user={user}
             formData={formData}
@@ -142,26 +179,37 @@ export default function ProfilePage() {
             handleSave={handleSave}
             handleLogout={handleLogout}
           />
+
         )}
-        
+
         {section === 'wallet' && (
+
           <WalletSection
             paymentOption={paymentOption}
             setPaymentOption={setPaymentOption}
           />
+
         )}
-        
-        {section === 'courses' && <CoursesSection />}
-        
+
+        {section === 'courses' && (
+          <CoursesSection />
+        )}
+
         {section === 'level' && (
+
           <LevelSection
             loginCount={user?.loginCount || 0}
             lastLogin={user?.lastLogin || null}
           />
+
         )}
 
-        {section === 'messages' && <Messages />}
+        {section === 'messages' && (
+          <Messages />
+        )}
+
       </main>
+
     </div>
   );
 }

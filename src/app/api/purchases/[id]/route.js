@@ -1,3 +1,5 @@
+//src/app/api/purchases/[id]/route.js
+
 import { NextResponse } from 'next/server';
 import clientPromise from '../../../../../lib/mongodb';
 import { ObjectId } from 'mongodb';

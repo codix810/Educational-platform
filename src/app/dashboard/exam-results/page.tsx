@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
 import { TrashIcon, Search } from 'lucide-react';
-
+import { useAdminGuard } from '../../../../hooks/useAdminGuard';
 // تعريف النوع لكل نتيجة
 type ExamResult = {
   _id: string | { $oid: string };
@@ -17,6 +17,8 @@ type ExamResult = {
 
 // مكون الصفحة
 export default function ExamResultsPage() {
+      useAdminGuard(); // ✅ حماية الأدمن فقط
+
   const [results, setResults] = useState<ExamResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');

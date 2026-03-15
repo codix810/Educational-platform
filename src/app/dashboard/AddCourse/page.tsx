@@ -1,11 +1,15 @@
+//app/dashboard/AddCourse/page.jsx
 // @ts-ignore
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { useAdminGuard } from '../../../../hooks/useAdminGuard';
 
 export default function AddCoursePage() {
+    useAdminGuard(); // ✅ حماية الأدمن فقط
+  
   const [form, setForm] = useState({
     title: '',
     price: '',
