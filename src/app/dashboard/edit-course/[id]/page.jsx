@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { useAdminGuard } from '../../../../hooks/useAdminGuard';
+import { useAdminGuard } from '../../../../../hooks/useAdminGuard';
 
 export default function EditCoursePage() {
       useAdminGuard(); // ✅ حماية الأدمن فقط
