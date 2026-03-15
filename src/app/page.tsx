@@ -18,7 +18,7 @@ export default function Home() {
             {/* Text */}
             <div className="text-white max-w-xl">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold w-[100%] leading-tight mb-6">
-                ابدأ التعلم مع Edu Class
+                ابدأ التعلم مع CodiX
                 منصة دورات أونلاين
                 لمستقبل أفضل لك
               </h1>
