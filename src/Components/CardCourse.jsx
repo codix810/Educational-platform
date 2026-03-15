@@ -67,7 +67,7 @@ const CardCourse = () => {
         setExams(examCounts);
 
       } catch (err) {
-        console.error("❌ Data loading failed:", err);
+        console.error("❌ فشل تحميل البيانات:", err);
       }
     };
 
@@ -85,13 +85,13 @@ const CardCourse = () => {
 
   const getTeacherName = (teacherId) => {
     const teacher = teachers.find(t => t._id === teacherId);
-    return teacher ? teacher.name : 'Unknown teacher';
+    return teacher ? teacher.name : 'مدرس غير معروف';
   };
 
   return (
     <div className="bg-gray-50 py-12">
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-center mb-8">Courses</h1>
+        <h1 className="text-3xl font-bold text-center mb-8">الكورسات المتاحة</h1>
 
 <div className="flex flex-wrap justify-center gap-2 mb-12">
   {categories.map((cat, index) => (
@@ -141,30 +141,30 @@ const CardCourse = () => {
                   <Link href={`/courses`}>
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm font-semibold text-[#7CA982]">{course.category}</span>
-                      <span className="text-sm font-bold text-gray-800">{course.price} EGP</span>
+                      <span className="text-sm font-bold text-gray-800">{course.price} جنيه</span>
                     </div>
 
                     <h3 className="text-lg font-bold mb-1">{course.title}</h3>
                     <p className="text-sm text-gray-600 mb-4">
-                       Instructor: {getTeacherName(course.teacherId)}
+                      مدرس الكورس: {getTeacherName(course.teacherId)}
                     </p>
 
                     <div className="flex justify-between text-sm text-gray-600 mb-4">
                       <div className="flex items-center gap-1">
                         <MdAccessTime />
-                        <p>{durations[course._id] || '—'} Minute</p>
+                        <p>{durations[course._id] || '—'} دقيقة</p>
                       </div>
                       <div className="flex items-center gap-1">
                         <MdOutlinePlayLesson />
-                        <p>{videos[course._id] || 0} Lessons</p>
+                        <p>{videos[course._id] || 0} دروس</p>
                       </div>
                       <div className="flex items-center gap-1">
                         <PiStudentFill />
-                        <p>+{getStudentCount(course._id)} students</p>
+                        <p>+{getStudentCount(course._id)} طلاب</p>
                       </div>
                     </div>
 
-                    <p className="text-sm text-purple-600 mb-2"> Exams: {exams[course._id] || 0}</p>
+                    <p className="text-sm text-purple-600 mb-2"> عدد الامتحانات: {exams[course._id] || 0}</p>
 
                     <div className="flex justify-between items-center">
                       <div className="flex items-center text-yellow-500">

@@ -48,27 +48,23 @@ const Advantages = () => {
 
   const advantagesData = [
     {
-      // count: graduatesCount,
-      count: 2000,
-      label: "Graduates",
+      count: graduatesCount,
+      label: "الخريجين",
       icon: <BiSolidBookOpen size={50} className="text-[#7CA982]" />,
     },
     {
-      // count: coursesCount,
-      count: 200,
-      label: "Courses",
+      count: coursesCount,
+      label: "الدورات",
       icon: <FaBook size={50} className="text-[#7CA982]" />,
     },
     {
-      // count: teachersCount,
-      count: 150,
-      label: "Instructors",
+      count: teachersCount,
+      label: "المدربون",
       icon: <FaChalkboardTeacher size={50} className="text-[#7CA982]" />,
     },
     {
-      // count: studentsCount,
-      count: 5000,
-      label: "Students",
+      count: studentsCount,
+      label: "طلاب",
       icon: <FaUsers size={50} className="text-[#7CA982]" />,
     },
   ];

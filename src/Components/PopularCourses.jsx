@@ -68,7 +68,7 @@ const PopularCourses = () => {
   return (
     <div className="bg-gray-50 py-12">
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-center mb-10">Top 5 Popular Courses</h1>
+        <h1 className="text-3xl font-bold text-center mb-10">أفضل 5 دورات دراسية شائعة</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {topCourses.map((course) => (
@@ -85,21 +85,21 @@ const PopularCourses = () => {
                 <div className="p-4">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-semibold text-[#7CA982]">{course.category}</span>
-                    <span className="text-sm font-bold text-gray-800">{course.price} EGP</span>
+                    <span className="text-sm font-bold text-gray-800">{course.price} جنيه</span>
                   </div>
                   <h3 className="text-lg font-bold mb-1">{course.title}</h3>
                   <p className="text-sm text-gray-600 mb-4"> 
-                   Instructor: {getTeacherName(course.teacherId)}
+                      مدرس الكورس: {getTeacherName(course.teacherId)}
                   </p>
 
                   <div className="flex justify-between text-sm text-gray-600 mb-4">
                     <div className="flex items-center gap-1">
                       <MdOutlinePlayLesson />
-                      <p>{videos[course._id] || 0} Lessons</p>
+                      <p>{videos[course._id] || 0} دروس</p>
                     </div>
                     <div className="flex items-center gap-1">
                       <PiStudentFill />
-                      <p>+{getStudentCount(course._id)} students</p>
+                      <p>+{getStudentCount(course._id)} طلاب</p>
                     </div>
                   </div>
 
