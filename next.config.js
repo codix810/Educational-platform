@@ -3,7 +3,7 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   }, 
- images: {
+  images: {
     remotePatterns: [
       {
         protocol: 'https',
@@ -12,8 +12,8 @@ const nextConfig = {
     ],
   },
   eslint: {
-    ignoreDuringBuilds: true, // ✅ ده يمنع Vercel يوقف الـ build بسبب ESLint
+    ignoreDuringBuilds: true,
   },
 };
 
-
+module.exports = nextConfig;
