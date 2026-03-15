@@ -2,10 +2,18 @@
 const nextConfig = {
   experimental: {
     serverActions: true,
+  }, 
+ images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+    ],
   },
   eslint: {
     ignoreDuringBuilds: true, // ✅ ده يمنع Vercel يوقف الـ build بسبب ESLint
   },
 };
 
-module.exports = nextConfig;
+
