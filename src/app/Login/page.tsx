@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -19,7 +20,9 @@ export default function LoginPage() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
+
     const deviceId = localStorage.getItem('deviceId');
+
     const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -32,6 +35,7 @@ export default function LoginPage() {
     if (res.ok) {
       setSuccess(true);
       setMessage(data.message);
+
       localStorage.setItem(
         'user',
         JSON.stringify({
@@ -44,6 +48,7 @@ export default function LoginPage() {
           deviceId,
         })
       );
+
       setTimeout(() => {
         const redirectUrl = localStorage.getItem('redirect') || '/';
         window.location.href = redirectUrl;
@@ -56,15 +61,18 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-[#D8E2EA] px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg animate-fade-in">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">تسجيل الدخول</h2>
+      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
+
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          تسجيل الدخول
+        </h2>
 
         {message && (
           <div
-            className={`p-4 rounded-md mb-6 text-center transition-all ${
+            className={`p-4 rounded mb-6 text-center ${
               success
-                ? 'bg-green-100 text-green-800 border border-green-300'
-                : 'bg-red-100 text-red-800 border border-red-300'
+                ? 'bg-green-100 text-green-800'
+                : 'bg-red-100 text-red-800'
             }`}
           >
             {message}
@@ -72,71 +80,63 @@ export default function LoginPage() {
         )}
 
         {loading ? (
-          <div className="flex justify-center items-center py-10">
-            <span className="flex space-x-2">
-              <span className="w-3 h-3 bg-gray-700 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-              <span className="w-3 h-3 bg-gray-700 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-              <span className="w-3 h-3 bg-gray-700 rounded-full animate-bounce"></span>
-            </span>
+          <div className="flex justify-center py-10">
+            <div className="w-6 h-6 border-4 border-gray-300 border-t-[#7CA982] rounded-full animate-spin"></div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
+
+            {/* EMAIL */}
             <input
               type="email"
+              list="emailSuggestions"
               placeholder="البريد الإلكتروني"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 rounded border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-300"
+              autoComplete="email"
+              className="w-full px-4 py-2 rounded border border-gray-300 focus:ring-2 focus:ring-[#7CA982] outline-none"
             />
-            <input
-              type="password"
-              placeholder="كلمة المرور"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full px-4 py-2 rounded border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-300"
-            />
+
+            {/* اقتراحات الإيميل */}
+            <datalist id="emailSuggestions">
+              <option value="@gmail.com" />
+              <option value="@outlook.com" />
+              <option value="@hotmail.com" />
+              <option value="@yahoo.com" />
+            </datalist>
+
+            {/* PASSWORD */}
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="كلمة المرور"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full px-4 py-2 rounded border border-gray-300 focus:ring-2 focus:ring-[#7CA982] outline-none"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-2.5 text-gray-500"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+
+            {/* BUTTON */}
             <button
               type="submit"
-              className="w-full py-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all"
+              className="w-full py-2 rounded bg-[#7CA982] hover:opacity-90 text-white font-semibold transition"
             >
               دخول
             </button>
+
           </form>
         )}
       </div>
-
-      {/* ✨ Animations */}
-      <style jsx>{`
-        .animate-fade-in {
-          animation: fadeIn 0.2s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-bounce {
-          animation: bounce 1s infinite;
-        }
-
-        @keyframes bounce {
-          0%, 80%, 100% {
-            transform: scale(0);
-          }
-          40% {
-            transform: scale(1);
-          }
-        }
-      `}</style>
     </div>
   );
 }

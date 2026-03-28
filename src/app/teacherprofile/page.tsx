@@ -248,7 +248,7 @@ setTotalStudents(myStudents.length);
 
                       <div className="flex items-center gap-1">
                         <FaUsers />
-                        {course.studentsEnrolled?.length || 0} students
+                        {totalStudents} students
                       </div>
 
                       <div className="flex items-center gap-1">
