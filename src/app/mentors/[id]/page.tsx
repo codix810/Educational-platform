@@ -29,8 +29,7 @@ type ReviewType = {
   comment: string;
 };
 
-export default function InstructorPublicProfile({ params }: { params: { id: string } }) {
-
+export default function InstructorPublicProfile({ params }: { params: Promise<{ id: string }> })
   const [instructor, setInstructor] = useState<InstructorType | null>(null);
   const [courses, setCourses] = useState<CourseType[]>([]);
   const [reviews, setReviews] = useState<ReviewType[]>([]);
