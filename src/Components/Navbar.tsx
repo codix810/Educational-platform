@@ -67,6 +67,7 @@ const getLinks = () => {
   const common = [
     { name: 'الرئيسية', href: '/', icon: HomeIcon },
     { name: 'الكورسات', href: '/courses', icon: BookOpenIcon },
+    
   ];
 
   if (isAdmin) {
@@ -219,27 +220,35 @@ const getLinks = () => {
                 {/* Mobile Button */}
 <div className="lg:hidden flex items-center gap-2">
 
-  {/* Account Button */}
+  {/* لو زائر */}
+  {isVisitor && (
+    <div className="flex items-center gap-2">
+      <Link
+        href="/Login"
+        className="text-white text-sm font-bold px-3 py-1"
+      >
+        دخول
+      </Link>
+
+      <Link
+        href="/Signup"
+        className="bg-white text-[#7CA982] text-sm font-bold px-3 py-1 rounded-lg"
+      >
+        ابدأ
+      </Link>
+    </div>
+  )}
+
+  {/* لو مسجل دخول */}
   {!isVisitor && (
     <Menu as="div" className="relative">
-      <Menu.Button className="p-2 rounded-xl bg-white/20 text-white hover:bg-white/30 transition-all active:scale-90">
+      <Menu.Button className="p-2 rounded-xl bg-white/20 text-white">
         <UserIcon className="w-6 h-6" />
       </Menu.Button>
 
-      <Transition
-        as={Fragment}
-        enter="transition duration-200 ease-out"
-        enterFrom="opacity-0 translate-y-3 scale-95"
-        enterTo="opacity-100 translate-y-0 scale-100"
-        leave="transition duration-150 ease-in"
-        leaveFrom="opacity-100 translate-y-0 scale-100"
-        leaveTo="opacity-0 translate-y-3 scale-95"
-      >
-<Menu.Items className="absolute right-0 mt-3 w-56 max-w-[92vw] bg-white rounded-2xl shadow-xl p-2 border border-gray-100 origin-top-right">          <div className="px-3 py-2 mb-1 bg-[#7CA982]/10 rounded-xl">
-            <p className="text-xs text-[#7CA982] font-bold">مرحباً</p>
-            <p className="text-sm text-slate-700 font-bold truncate">{user?.name}</p>
-          </div>
-
+      <Transition as={Fragment}>
+        <Menu.Items className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-xl p-2">
+          
           <Menu.Item>
             {({ active }) => (
               <Link
@@ -271,9 +280,9 @@ const getLinks = () => {
     </Menu>
   )}
 
-  {/* Mobile Menu Button */}
-  <Disclosure.Button className="p-2 rounded-xl bg-white/20 text-white hover:bg-white/30 transition-all active:scale-90">
-    {open  ? <XMarkIcon className="w-7 h-7" /> : <Bars3Icon className="w-7 h-7" />}
+  {/* زرار القائمة */}
+  <Disclosure.Button className="p-2 rounded-xl bg-white/20 text-white">
+    {open ? <XMarkIcon className="w-7 h-7" /> : <Bars3Icon className="w-7 h-7" />}
   </Disclosure.Button>
 
 </div>
