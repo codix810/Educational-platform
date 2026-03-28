@@ -67,7 +67,6 @@ const getLinks = () => {
   const common = [
     { name: 'الرئيسية', href: '/', icon: HomeIcon },
     { name: 'الكورسات', href: '/courses', icon: BookOpenIcon },
-    
   ];
 
   if (isAdmin) {
@@ -220,35 +219,27 @@ const getLinks = () => {
                 {/* Mobile Button */}
 <div className="lg:hidden flex items-center gap-2">
 
-  {/* لو زائر */}
-  {isVisitor && (
-    <div className="flex items-center gap-2">
-      <Link
-        href="/Login"
-        className="text-white text-sm font-bold px-3 py-1"
-      >
-        دخول
-      </Link>
-
-      <Link
-        href="/Signup"
-        className="bg-white text-[#7CA982] text-sm font-bold px-3 py-1 rounded-lg"
-      >
-        ابدأ
-      </Link>
-    </div>
-  )}
-
-  {/* لو مسجل دخول */}
+  {/* Account Button */}
   {!isVisitor && (
     <Menu as="div" className="relative">
-      <Menu.Button className="p-2 rounded-xl bg-white/20 text-white">
+      <Menu.Button className="p-2 rounded-xl bg-white/20 text-white hover:bg-white/30 transition-all active:scale-90">
         <UserIcon className="w-6 h-6" />
       </Menu.Button>
 
-      <Transition as={Fragment}>
-        <Menu.Items className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-xl p-2">
-          
+      <Transition
+        as={Fragment}
+        enter="transition duration-200 ease-out"
+        enterFrom="opacity-0 translate-y-3 scale-95"
+        enterTo="opacity-100 translate-y-0 scale-100"
+        leave="transition duration-150 ease-in"
+        leaveFrom="opacity-100 translate-y-0 scale-100"
+        leaveTo="opacity-0 translate-y-3 scale-95"
+      >
+<Menu.Items className="absolute right-0 mt-3 w-56 max-w-[92vw] bg-white rounded-2xl shadow-xl p-2 border border-gray-100 origin-top-right">          <div className="px-3 py-2 mb-1 bg-[#7CA982]/10 rounded-xl">
+            <p className="text-xs text-[#7CA982] font-bold">مرحباً</p>
+            <p className="text-sm text-slate-700 font-bold truncate">{user?.name}</p>
+          </div>
+
           <Menu.Item>
             {({ active }) => (
               <Link
@@ -280,9 +271,9 @@ const getLinks = () => {
     </Menu>
   )}
 
-  {/* زرار القائمة */}
-  <Disclosure.Button className="p-2 rounded-xl bg-white/20 text-white">
-    {open ? <XMarkIcon className="w-7 h-7" /> : <Bars3Icon className="w-7 h-7" />}
+  {/* Mobile Menu Button */}
+  <Disclosure.Button className="p-2 rounded-xl bg-white/20 text-white hover:bg-white/30 transition-all active:scale-90">
+    {open  ? <XMarkIcon className="w-7 h-7" /> : <Bars3Icon className="w-7 h-7" />}
   </Disclosure.Button>
 
 </div>
@@ -300,6 +291,27 @@ const getLinks = () => {
             >
               <Disclosure.Panel className="lg:hidden bg-white/95 backdrop-blur-xl">
                 <div className="px-6 py-8 space-y-3">
+                  {isVisitor && (
+  <div className="mb-4 space-y-3">
+
+    <Link
+      href="/Login"
+      onClick={() => close()}
+      className="block w-full text-center px-6 py-3 rounded-2xl font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition"
+    >
+      دخول
+    </Link>
+
+    <Link
+      href="/Signup"
+      onClick={() => close()}
+      className="block w-full text-center px-6 py-3 rounded-2xl font-black bg-[#7CA982] text-white shadow hover:bg-[#6b8f70] transition"
+    >
+      ابدأ الآن
+    </Link>
+
+  </div>
+)}
                   {navLinks.map((item) => (
 <Link
   key={item.name}
